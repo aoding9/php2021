@@ -263,17 +263,20 @@
     "editor.background": "#111111" //背景颜色
   }, */
   // 自定义代码颜色
-  /*   "editor.tokenColorCustomizations": {
-    "comments": "#77744a", // 注释
-    "keywords": "#f38e54", // 关键字
-    "variables": "#db6db6", // 变量名
-    "strings": "#d3c95abd", // 字符串
-    "functions": "#eaf36ce3", // 函数名
-    "numbers": "#72a1f7" // 数字
-  }, */
+  "editor.tokenColorCustomizations": {
+    "comments": "#d3c95abd" // 注释
+    // "keywords": "#f38e54", // 关键字
+    // "variables": "#db6db6", // 变量名
+    // "strings": "#d3c95abd", // 字符串
+    // "functions": "#eaf36ce3", // 函数名
+    // "numbers": "#72a1f7" // 数字
+  },
   "editor.foldingStrategy": "indentation",
   "editor.showFoldingControls": "always",
   "vetur.validation.template": false,
   "cSpell.words": ["Prograss", "Submenu", "Vuex", "cascader", "echarts", "nprogress"],
-  "prettier.trailingComma": "none"
+  "prettier.trailingComma": "none",
+  "[php]": {
+    "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
+  }
 }
