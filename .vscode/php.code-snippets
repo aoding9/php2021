@@ -3,5 +3,10 @@
     "prefix": "ephp",
     "body": ["<?php\n"],
     "description": "<?php"
+  },
+  "<br>": {
+    "prefix": "ebr",
+    "body": ["echo '<br>';"],
+    "description": "换行"
   }
 }
