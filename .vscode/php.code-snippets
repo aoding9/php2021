@@ -9,4 +9,10 @@
     "body": ["echo '<br>';"],
     "description": "换行"
   }
+  ,
+  "<hr>": {
+    "prefix": "ehr",
+    "body": ["echo '<hr>';"],
+    "description": "分割线"
+  }
 }
