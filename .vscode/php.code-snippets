@@ -5,8 +5,8 @@
     "description": "<?php"
   },
   "<br>": {
-    "prefix": "ebr",
-    "body": ["echo '<br>';"],
+    "prefix": "br",
+    "body": ["'<br>'"],
     "description": "换行"
   }
   ,
