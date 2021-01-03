@@ -1,7 +1,7 @@
 https://www.php.cn/php-weizijiaocheng-381946.html
 <br>
 <?php
-// 1.引号定义
+// 1.字面量定义（用引号定义）
 // 2.结构化定义
 // 但是我用完发现好像都是有结构的。。。？
 
@@ -9,6 +9,7 @@ https://www.php.cn/php-weizijiaocheng-381946.html
 $str1 = "双引号定义";
 $str2 = '单引号
     定义';
+echo '<hr>';
 
 // 定界符heredoc和nowdoc
 // 注意点：
