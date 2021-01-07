@@ -1,7 +1,7 @@
 {
   "<?php": {
     "prefix": "ephp",
-    "body": ["<?php\n\t"],
+    "body": ["<pre>\n\n<?php\n\t"],
     "description": "<?php"
   },
   "<br>": {
