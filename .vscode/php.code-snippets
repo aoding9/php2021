@@ -6,13 +6,13 @@
   },
   "<br>": {
     "prefix": "br",
-    "body": ["'<br>'"],
+    "body": ["\"<br>\""],
     "description": "换行"
   }
   ,
   "<hr>": {
     "prefix": "ehr",
-    "body": ["echo '<hr>';"],
+    "body": ["echo \"<hr>\";"],
     "description": "分割线"
   }
 }

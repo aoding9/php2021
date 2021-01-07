@@ -8,7 +8,7 @@
  */
 $arr = [1, 2, 3, 4, 5, 6, 7];
 for ($i = 0, $len = count($arr); $i < $len; $i++) {
-  echo $i . '=>' . $arr[$i].'<br>';
+  echo $i . '=>' . $arr[$i] . '<br>';
 }
 
 echo '<hr>';
@@ -19,9 +19,32 @@ echo '<hr>';
  * list(变量)=arr 结构：依次从数组中取值，赋值给括号中的变量，有几个变量就取几次，取值的数组必须为索引从0开始，且索引连续的数组，否则报错
  */
 
-// each用法
 echo '<pre>';
-$people = array("Bill", "Steve", "Mark", "David");
-print_r (each($people));
 
-?>
+/** 
+ * each用法
+ *注意，each在php7.2后被抛弃，写的时候安装的8.0，换成7.1可以用，另外7.0不识别中文php文件
+ */
+$people = array("Bill", "Steve", "Mark", "David");
+print_r(each($people));
+
+/**
+ * list用法
+ */
+list($a, $b, $c, $d) = $pepole;
+// list(1=>$a,$b,$c,$d)=$pepole;  // 错误 必须0开头
+// list($a,$b,3=>$c,$d)=$pepole;  // 错误 必须连续
+echo $a, $b, $c, $d;
+echo '<hr>';
+
+
+/**
+ * 三个配合使用
+ * each的0总是对应key 1总是对应value
+ * 当取不到值时返回false，list的结果也为false
+ */
+$people2 = array("Bill", "Steve", "Mark", "David");
+
+while (list($key, $value) = each($people2)) {
+  echo $key . '=>' . $value . "\n";
+}
