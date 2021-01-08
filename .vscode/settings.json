@@ -264,7 +264,6 @@
   }, */
   // 自定义代码颜色
   "editor.tokenColorCustomizations": {
-    "comments": "#d3c95abd" // 注释
     // "keywords": "#f38e54", // 关键字
     // "variables": "#db6db6", // 变量名
     // "strings": "#d3c95abd", // 字符串
