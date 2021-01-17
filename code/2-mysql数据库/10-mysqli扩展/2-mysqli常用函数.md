@@ -1,0 +1,10 @@
+* 连接认证数据库：mysqli_connect
+* 设置字符集：mysqli_set_charset
+* 选择数据库：mysqli_select_db
+* 执行SQL指令：mysqli_query
+* 判定执行结果，获取错误信息：mysqli_errno/mysqli_error
+* 新增获取自增长id：mysqli_insert_id
+* 写操作获取受影响的行数：mysqli_affected_rows
+* 解析查询结果：**mysqli_fetch_assoc**/mysqli_fetch_row
+* 释放结果集资源：mysqli_free_result
+* 关闭连接资源：mysqli_close

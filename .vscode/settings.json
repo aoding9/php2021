@@ -279,4 +279,22 @@
     "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
   },
   "code-runner.runInTerminal": true,
+  "[sql]": {
+    "editor.defaultFormatter": "mtxr.sqltools"
+  },
+  "sqltools.connections": [
+    {
+      "mysqlOptions": {
+        "authProtocol": "default"
+      },
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 3306,
+      "driver": "MySQL",
+      "name": "db1",
+      "database": "db1",
+      "username": "root",
+      "password": "root"
+    }
+  ],
 }
