@@ -95,10 +95,10 @@ function write($conn, $sql, &$error, $insert = false)
   else return mysqli_affected_rows($conn);
 }
 
-/* 测试代码注释掉
+// 测试代码注释掉
 // 实际使用一下看看
 # 1 连接
-echo "<hr>连接数据库\n";
+echo "<pre><hr>连接数据库\n";
 $conn = connect($error, 'root', 'root','db1');
 // 错误处理
 if(!$conn) die($error);
@@ -110,4 +110,3 @@ var_dump(read($conn,"select * from tb1",$error,true));
 # 3 写操作
 echo "<hr>写操作\n";
 echo write($conn,"insert into tb1 values(null,'小红','女',20,'四班');",$error,true);
-*/

@@ -61,6 +61,7 @@
     "*.vue": "vue",
     "*.html": "html",
     "*.art": "html",
+    "*.htm": "php",
     "*.php": "php"
   },
   "emmet.showSuggestionsAsSnippets": true,

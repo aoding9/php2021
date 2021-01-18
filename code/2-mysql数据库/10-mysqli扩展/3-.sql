@@ -9,4 +9,5 @@ create table db1.tb1(
   class_name varchar(20)
 );
 
+insert into tb1 
 select * from tb1;
