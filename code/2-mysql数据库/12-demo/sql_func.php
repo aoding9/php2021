@@ -23,7 +23,7 @@ function connect($user, $pass, $dbname, &$error, $host = 'localhost', $port = '3
 }
 
 
-# 2 外部传入SQL，负责执行也验证SQL语法问题，成功返回结果，失败返回false，错误记录在错误参数中
+# 2 外部传入SQL，只负责执行和判定SQL执行错误，成功返回结果，失败返回false，错误记录在错误参数中
 // 有可以执行普通的写操作
 function query($conn, $sql, &$error)
 {
@@ -41,7 +41,7 @@ function query($conn, $sql, &$error)
 }
 
 
-# 3 用户提供SQL指令，可以查询一条或者多条记录
+# 3 普通查询，用户提供SQL指令，可以查询一条或者多条记录
 function read($conn, $sql, &$error, $all = false)
 {
   # 执行SQL，并判定结果
@@ -94,4 +94,43 @@ function auto_update($conn, $data, $table, &$error, $id = 0)
   if (query($conn, $sql, $error)) return mysqli_affected_rows($conn);
   else return false;
 }
-?>
+
+
+// 5 自动查询
+# 系统提供查询条件（只能是=比较和and逻辑运算），可以查询一条记录或者多条记录
+# 成功返回数组（多条二维数组，一条一维数组）失败返回false，错误记录在参数中
+function auto_read($conn, $table, &$error, $where = [], $all = false)
+{
+  # 组装查询条件：默认永远为真
+  $where_clause = ' where 1 ';  # where 1
+  # 空数组自动转换成布尔false
+  if ($where) {
+    # 解析条件
+    foreach ($where as $k => $v) {
+      $where_clause .= ' and ' . $k . " = '$v' ";
+    }  # where 1 and title = 'news' ...      
+  }
+
+  # 组织完整SQL
+  $sql = "select * from {$table} {$where_clause}";
+  $res = query($conn, $sql, $error);
+
+  # 判定执行结果
+  if ($res === false) return $res;
+
+  # 判定获取一条还是多条
+  $lists = [];
+  if ($all) {
+    # 获取多条，二维数组存储
+    while ($row = mysqli_fetch_assoc($res)) {
+      $lists[] = $row;
+    }
+  } else {
+    # 获取一条，一维数组存储
+    $lists = mysqli_fetch_assoc($res);
+  }
+
+  # 释放资源，返回结果
+  mysqli_free_result($res);
+  return $lists;
+}

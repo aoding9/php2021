@@ -292,7 +292,7 @@
       "server": "localhost",
       "port": 3306,
       "driver": "MySQL",
-      "name": "db1",
+      "name": "news",
       "database": "db1",
       "username": "root",
       "password": "root"

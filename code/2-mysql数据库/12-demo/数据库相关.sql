@@ -1,4 +1,4 @@
-# 数据库
+# 创建数据库
 create database news charset utf8;
 
 # 创建数据表
@@ -17,3 +17,9 @@ create table news.news(
     a_id int unsigned not null comment '作者id',
     publish int unsigned not null comment '发布时间'
 )charset utf8;
+
+-- 蠕虫复制
+insert into news.news(title,content,a_id,publish) select title,content,a_id,publish from news.news;
+
+-- 清除数据
+TRUNCATE news.news;

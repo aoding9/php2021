@@ -15,7 +15,7 @@ if (empty($title) || empty($content)) {
   // 跳转回去
   header("refresh:2;url=add.php");
   echo "新闻和标题不能为空";
-  // exit; # exit意为出口，退出，中断执行，此处用于断点调试
+  exit; # exit意为出口，退出，中断执行
 }
 
 # 连接认证
