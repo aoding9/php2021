@@ -98,3 +98,9 @@ Route::get('/test1_2', [TestController::class, 'test1_2']);
 // 获取请求参数
 Route::get('test2/{id?}','TestController@test2');
 
+
+// DB类增删改查
+Route::get('add','TestController@add');
+Route::get('delete','TestController@delete');
+Route::get('modify','TestController@modify');
+Route::get('select','TestController@select');

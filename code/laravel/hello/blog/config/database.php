@@ -43,6 +43,8 @@ return [
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
 
+        // 这里也可以配置数据库
+        // 默认是先获取env文件的配置,如果没有则用第二个值,可以手动改掉,不建议这里改
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),

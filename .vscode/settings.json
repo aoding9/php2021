@@ -311,4 +311,6 @@
       "password": "root"
     }
   ],
+  "intelephense.environment.documentRoot": "./code/laravel/hello/blog/public",
+  "intelephense.environment.phpVersion": "7.3.4",
 }
