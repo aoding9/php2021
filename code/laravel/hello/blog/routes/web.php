@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 // Route类静态调用方法,第一个参数是url,第二个参数是回调函数 或者 字符串的控制器方法
 // url的第一个/可以省略(如果只有斜杠则不可以省略)
 Route::get('/', function () {
-    echo '回调函数里面可以return 也可以执行其他的代码';
+    // echo '回调函数里面可以return 也可以执行其他的代码';
     return view('welcome');
 });
 
@@ -76,3 +76,25 @@ Route::prefix('admin2')->group(
     });
   }
 );
+
+
+// 控制器路由
+// 6-7的写法: 控制器名@方法
+Route::get('test1','TestController@test1');
+// 这里的这里是命名空间,所以用\反斜杠
+Route::get('test1_2','Admin\TestController@test1_2');
+
+// 注:laravel8改变了之前的写法,Providers不再带有命名空间属性:
+// 如果要使用旧写法:去app/Providers/RouteServiceProvider中,将protected $namespace = 'App\\Http\\Controllers';去掉注释即可
+
+// 新版写法: 手动引入控制器的命名空间
+// 更新说明: https://learnku.com/docs/laravel/8.x/releases/9351#d99737
+use App\Http\Controllers\TestController;
+Route::get('/test1_2', [TestController::class, 'test1_2']);
+
+// 感觉旧版写起来方便点,先用旧版吧
+
+
+// 获取请求参数
+Route::get('test2/{id?}','TestController@test2');
+

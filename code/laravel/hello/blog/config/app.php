@@ -185,9 +185,10 @@ return [
     | This array of class aliases will be registered when this application
     | is started. However, feel free to register as many as you wish as
     | the aliases are "lazy" loaded so they don't hinder performance.
-    |
     */
-
+    // 这个类别名的数组将在项目开始时被注册,不过,你可以随意去注册你所希望的那么多,因为别名是被懒加载的,所以它们不妨碍性能
+    // feel free 请随意,不必拘谨
+    // 定义类的别名
     'aliases' => [
 
         'App' => Illuminate\Support\Facades\App::class,
@@ -208,6 +209,8 @@ return [
         'Gate' => Illuminate\Support\Facades\Gate::class,
         'Hash' => Illuminate\Support\Facades\Hash::class,
         'Http' => Illuminate\Support\Facades\Http::class,
+        // input门面,获取请求参数 6以上的取消了,现在直接用Request门面类吧
+        // 'Input' => Illuminate\Support\Facades\Input::class,
         'Lang' => Illuminate\Support\Facades\Lang::class,
         'Log' => Illuminate\Support\Facades\Log::class,
         'Mail' => Illuminate\Support\Facades\Mail::class,

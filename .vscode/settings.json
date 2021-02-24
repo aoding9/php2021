@@ -296,6 +296,19 @@
       "database": "db1",
       "username": "root",
       "password": "root"
+    },
+    {
+      "mysqlOptions": {
+        "authProtocol": "default"
+      },
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 3306,
+      "driver": "MySQL",
+      "name": "hello",
+      "database": "hello",
+      "username": "root",
+      "password": "root"
     }
   ],
 }
