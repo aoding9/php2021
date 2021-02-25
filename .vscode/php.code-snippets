@@ -4,15 +4,15 @@
     "body": ["<?php $0?>"],
     "description": "<?php?>"
   },
-  "<br>": {
-    "prefix": "br",
-    "body": ["\"<br>\""],
-    "description": "换行"
-  }
-  ,
-  "<hr>": {
-    "prefix": "ehr",
-    "body": ["echo \"<hr>\";"],
-    "description": "分割线"
-  }
+  // "<br>": {
+  //   "prefix": "br",
+  //   "body": ["\"<br>\""],
+  //   "description": "换行"
+  // }
+  // ,
+  // "<hr>": {
+  //   "prefix": "ehr",
+  //   "body": ["echo \"<hr>\";"],
+  //   "description": "分割线"
+  // }
 }

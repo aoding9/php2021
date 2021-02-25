@@ -104,3 +104,17 @@ Route::get('add','TestController@add');
 Route::get('delete','TestController@delete');
 Route::get('modify','TestController@modify');
 Route::get('select','TestController@select');
+
+
+// 视图 blade模板语法
+Route::get('test3','TestController@test3');
+Route::get('test4','TestController@test4');
+Route::get('test5','TestController@test5');
+
+// CSRF保护
+Route::get('test6','TestController@test6');
+Route::post('test7','TestController@test7')->name('t7');
+
+
+Route::get('test8','TestController@test8');
+Route::get('test9','TestController@test9');
