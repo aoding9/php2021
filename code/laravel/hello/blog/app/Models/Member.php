@@ -24,5 +24,6 @@ class Member extends Model
   protected $table = 'member';
   protected $primayKey = 'id';
   public $timestamps = false;
+  // create方法保存数据,必须定义$fillable属性
   protected $fillable = ['name','age','email'];
 }

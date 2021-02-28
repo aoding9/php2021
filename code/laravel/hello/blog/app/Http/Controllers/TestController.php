@@ -228,11 +228,11 @@ class TestController extends Controller
   // blade模板 循环、分支语法
   public function test4()
   {
-    $data = DB::table('member')->where('id','<','5')->get();
+    $data = DB::table('member')->where('id', '<', '5')->get();
 
     $day = date('N');
 
-    return view('admin.test.test4',compact('data','day'));
+    return view('admin.test.test4', compact('data', 'day'));
   }
 
   // 模板 继承、包含 语法
@@ -274,16 +274,139 @@ class TestController extends Controller
     模型创建：
     手动（看文档）或者artisan命令，可以分目录 Models/ModelName 不过拉若8默认就是在Models目录下，以前是在app目录下，如果删除了modles目录，则自动创建到app目录下
     php artisan make:model ModelName
-  */
+    */
 
-  public function test8(){
+  // 测试AR模式的表单页面
+  public function test8()
+  {
+    return view('admin.test.test8');
+  }
+
+
+  // AR模式保存数据
+  // 依赖注入
+  public function mod_add(Request $req)
+  {
     // 1 不实例化，静态调用
     // $data = Member::get();
     // 2 实例化再调用
     // 自己定义的方法要用第二种，另外，第二种方法更加符合AR模式的映射关系
-    $model = new Member();
-    $data = $model->get();
+    // $model = new Member();
+    // $data = $model->get();
+    // dump($data);
+
+    // 字段和属性建立映射关系
+    // $model -> name ='王五';
+    // $model -> age = 22;
+    // $model -> email = 'asdasd@ass.cn';
+
+    // 保存数据,即实例映射到记录
+    // $res = $model-> save();
+
+    // 高级写法???
+    // create方法由于直接从请求参数里获取数据,必须定义模型的$fillable属性
+    $res = Member::create($req->all());
+    // 数据在对象的attributes属性中
+
+    // DB类中的insert方法(以及其他方法)在模型中也可以用,但是,insert不受$fillable影响,插入时需要手动排除不插入数据表的字段,如csrftoken
+
+    dump($res);
+  }
+
+
+
+  // AR模式查询操作
+  public function mod_select(Request $req)
+  {
+    // 查一条: 获取主键为4的记录,返回模型实例对象
+    $data = Member::find(5); // 主要这个,用的可能比较多
+
+    // laravel中可以在最后用toArray方法,将对象的结果集转为数组
+    // $data = Member::find(4)->toArray(); 
+
+    // 查询多条:
+    // 不加查询条件时,all()用法和get一样,默认查全部,也可以查指定字段
+    // $data = Member::all(['name','age']); 
+    // $data2 = Member::get(['name','age']);
+    // dump($data==$data2); // true 数据是一样的
+
+    // 区别:all前面不能加查询条件,只能查全部,get更灵活
+    // $data = Member::where('id','1')->all(); // 报错,查询构造器类Eloquent\Builder里面没有all方法,他是Eloquent\Model类的静态方法,也就是要模型直接静态调用
+
+
+    dump($data); // 数据在对象的attributes属性中
+  }
+
+  // AR模式修改数据
+  public function mod_mod(Request $req)
+  {
+    // 需要先查记录,拿到记录对应的实例,通过实例的属性进行修改,然后保存
+    $model = Member::find(5);
+    // 通过模型实例的属性进行修改
+    $model->email = 'hhhhhhh@h.hh';
+
+    // 保存
+    $res = $model->save();
+    dump($res);  // true 返回执行是否成功
+
+    // 通过update方法修改
+    // dump(Member::where('id',6)->update(['age'=>100]));  // 1 返回受影响行数
+  }
+
+  // AR模式删除数据
+  public function mod_del(Request $req)
+  {
+    // 需要先查记录,拿到记录对应的实例,通过实例的属性进行修改,然后保存
+    $model = Member::find(7);
+    // 保存
+    $res = $model->delete();
+    dump($res);  // true 返回执行是否成功
+
+    // 通过update方法修改
+    //  dump(Member::where('id',8)->delete());  // 1 返回受影响行数
+  }
+
+
+  //  表单验证，验证器的使用
+  public function test9(Request $req)
+  {
+    /* 表单提交的一般步骤：
+     1 接收并验证数据是否合法
+     2 通过验证则写入数据表
+     3 告知用户是是否成功
+    */ 
+
+    /* 验证器使用：
+      1 依赖注入，获取请求对象
+      2 调用实例的validate方法，传入$req和验证规则数组，具体哪些规则看文档，语法：'验证字段名'=>'规则1|规则2...'
+      3 如果没通过，自动重定向到上一页，错误信息自动存到session里面
+    */
+
+    // min|max如果指定类型，自动切换字符长度或者数字大小，默认是字符长度
+    $this->validate($req,[
+      'name'=>'required|min:2|max:20|unique:member',
+      'age'=>'required|integer|min:1|max:100',
+      'email'=>'required|email',
+    ],[
+      /* 如何显示成中文错误信息：
+        1 在第三个参数自定义错误信息，比较繁琐
+        2 packagist.org找语言包 composer require laravel-lang/lang，
+          在/vendor/laravel-lang/lang/src里面，复制zh_CN到/resource/lang下面,
+          然后修改config/app.php中的local属性:  'locale' => 'zh_CN', 
+          如果有翻译不到的词，可以手动到语言包的validation.php中添加
+      */
+      'name.required' => '用户名不能为空',
+      'age.required' => '年龄不能为空',
+    ]);
     
-    dump($data);
+
+    /* 文件上传
+      文档： https://learnku.com/docs/laravel/8.x/requests/9369#files
+    */
+    // 为了测试，添加个头像字段 alter table member add column avatar varchar(100) after email;
+  }
+
+  public function test10()
+  {
   }
 }

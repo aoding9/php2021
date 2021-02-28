@@ -115,6 +115,13 @@ Route::get('test5','TestController@test5');
 Route::get('test6','TestController@test6');
 Route::post('test7','TestController@test7')->name('t7');
 
+// AR模式 增删改查
+Route::any('mod_add','TestController@mod_add');
+Route::get('mod_del','TestController@mod_del');
+Route::get('mod_mod','TestController@mod_mod');
+Route::get('mod_select','TestController@mod_select');
 
+// 提交测试数据的表单
 Route::get('test8','TestController@test8');
-Route::get('test9','TestController@test9');
+// 表单验证，验证器的使用
+Route::post('test9','TestController@test9');
