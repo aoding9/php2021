@@ -8,8 +8,8 @@
 </head>
 <body>
 <!-- 通过ajax提交表单，laravel会自动返回json格式的信息，其中包含错误提示 -->
-<!-- <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
- <script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
+ <!-- <script>
   $(function(){
     $.post({
       url:'/test9',
@@ -20,6 +20,15 @@
     });
   })
 </script> -->
+<script>
+  // 点击图片刷新验证码
+  $(function(){
+    $('#captcha').click(function(){
+      // 地址相同,加随机数防缓存
+      $(this).attr({src:'{{captcha_src()}}'+'&_='+Math.random()});
+    })
+  })
+</script>
 
 <!-- 必须要post类型，enctype='multipart/form-data'，然后要有input:file框，如果没关csrf也要加上 -->
   <form action="/test9" method='post' enctype="multipart/form-data">
@@ -27,7 +36,8 @@
     <input type="text" name='name' placeholder="输入用户名"><br>
     <input type="text" name='age' placeholder="输入年龄"><br>
     <input type="text" name='email' placeholder="输入邮箱"><br>
-    <input type="file" name="avater" id="">
+    <input type="file" name="avatar" id=""> <br>
+    <input type="text" name='captcha' placeholder="输入验证码"><img id='captcha' src="{{captcha_src()}}" alt=""> <br>
     {{csrf_field()}}
     <input type="submit" value="提交">
     

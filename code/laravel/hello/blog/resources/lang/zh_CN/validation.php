@@ -177,5 +177,10 @@ return [
         'time'                  => '时间',
         'available'             => '可用的',
         'size'                  => '大小',
+        // 手动加的验证码
+        'captcha'               => '验证码',
+        
     ],
+    // validation.captcha就是validation.php里面的captcha数组元素,加上就可以显示对应的值了
+    'captcha' => '验证码错误'
 ];

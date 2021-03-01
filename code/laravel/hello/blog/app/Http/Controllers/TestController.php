@@ -374,7 +374,7 @@ class TestController extends Controller
      1 接收并验证数据是否合法
      2 通过验证则写入数据表
      3 告知用户是是否成功
-    */ 
+    */
 
     /* 验证器使用：
       1 依赖注入，获取请求对象
@@ -383,11 +383,13 @@ class TestController extends Controller
     */
 
     // min|max如果指定类型，自动切换字符长度或者数字大小，默认是字符长度
-    $this->validate($req,[
-      'name'=>'required|min:2|max:20|unique:member',
-      'age'=>'required|integer|min:1|max:100',
-      'email'=>'required|email',
-    ],[
+    $this->validate($req, [
+      'name' => 'required|min:2|max:20|unique:member',
+      'age' => 'required|integer|min:1|max:100',
+      'email' => 'required|email',
+      // captcha是验证码包的自带验证类型,另外翻译文件也要改
+      'captcha'=>'required|captcha'
+    ], [
       /* 如何显示成中文错误信息：
         1 在第三个参数自定义错误信息，比较繁琐
         2 packagist.org找语言包 composer require laravel-lang/lang，
@@ -398,15 +400,66 @@ class TestController extends Controller
       'name.required' => '用户名不能为空',
       'age.required' => '年龄不能为空',
     ]);
-    
+
 
     /* 文件上传
       文档： https://learnku.com/docs/laravel/8.x/requests/9369#files
+      1 判断文件是否存在.并且正常上传
+      2 获取文件信息
+      3 保存文件(移动临时文件并重命名)
+      注意点: 
+      0 如果用store存储文件，需要先配置文件系统：https://learnku.com/docs/laravel/8.x/filesystem/9392
+      1 文件上传到public目录内,这样浏览器才能访问到(/public/statics/uploads)
+      2 hasFile用于判断请求实例是否有文件,isValid是文件实例的验证方法,判断是否正常上传(根据文件上传错误码)
+      3 extension获取文件实例的扩展名
     */
     // 为了测试，添加个头像字段 alter table member add column avatar varchar(100) after email;
+    if ($req->hasFile('avatar') && $req->file('avatar')->isValid()) {
+      // 重命名
+
+      // 确定有这个文件的话,可以这么获取UploadedFile实例
+      $name = sha1(time() . rand(100000, 999999)) . '.' . $req->avatar->extension();
+      // dump($name);
+      // 文件存储到指定目录 move(目录,文件名) 以入口文件为根的相对目录./
+      $req->avatar->move('./statics/uploads', $name);
+      // 这个是给前端展示的路径,要用/
+      $path = '/statics/uploads/' . $name;
+    }
+
+    // 写入数据表,先排除token和原来的avatar,然后把路径添加进去
+    $data = $req->except(['_token', 'avatar']);
+    $data['avatar'] = $path ?? '';
+    $res = Member::insert($data);
+
+    // 返回结果
+    return $res ? 'OK' : 'Fail';
+
+    /* 验证码 第三方包
+     使用说明:https://packagist.org/packages/mews/captcha
+     1 composer require mews/captcha 下载安装
+     2 config/app.php的providers添加 Mews\Captcha\CaptchaServiceProvider::class,
+     3 config/app.php的aliases添加'Captcha' => Mews\Captcha\Facades\Captcha::class,
+     4 php artisan vendor:publish创建默认配置文件,去config/captcha.php中修改length长度为4
+     5 视图里面创建input框输入验证码,然后调用captcha_src()或captcha_img()显示验证码图片
+     6 控制器接收,设置验证规则['captcha' => 'required|captcha']
+     7 修改翻译文件,添加captcha元素(要添加2个)
+    */
   }
 
+  // 分页
+  // https://learnku.com/docs/laravel/8.x/pagination/9402
   public function test10()
   {
+    // $data = Member::all();
+
+    $data = Member::paginate(1);
+
+    return view('admin.test.test10', compact('data'));
+  }
+
+  public function test11()
+  {
+ 
+
   }
 }

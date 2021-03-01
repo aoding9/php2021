@@ -125,3 +125,11 @@ Route::get('mod_select','TestController@mod_select');
 Route::get('test8','TestController@test8');
 // 表单验证，验证器的使用
 Route::post('test9','TestController@test9');
+
+// 分页
+Route::get('test10','TestController@test10');
+
+// Route::get('test10','TestController@test10');
+// Route::get('test10','TestController@test10');
+// Route::get('test10','TestController@test10');
+// Route::get('test10','TestController@test10');
