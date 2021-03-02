@@ -41,7 +41,8 @@ class CreatePaperTable extends Migration
       // $table->id(); 
 
       // increments() 递增 ID（主键），相当于 UNSIGNED INTEGER
-      $table-> increments('id')->comment('自增主键');
+      // $table-> increments('id')->comment('自增主键');  // int主键
+      $table-> id()->comment('自增主键'); // bigint主键
 
       $table->string('paper_name',100)->unique()->comment('试卷名称');
 

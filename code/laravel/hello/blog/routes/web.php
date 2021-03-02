@@ -139,5 +139,11 @@ Route::get('test12','TestController@test12');
 // 缓存操作
 Route::get('test13','TestController@test13');
 
-
+// 联表操作
 Route::get('test14','TestController@test14');
+
+// 关联模型
+// 一对一
+Route::get('test15','TestController@test15');
+Route::get('test16','TestController@test16');
+Route::get('test17','TestController@test17');

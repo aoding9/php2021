@@ -10,6 +10,8 @@ namespace App\Http\Controllers; // 声明命名空间
 // Request类里面里面是和http请求相关的东西
 
 // use App\Models\Member as ModelsMember;
+
+use App\Models\Article;
 use Illuminate\Http\Request;
 
 // laravel 6.x 版本已经取消 Input Facades 了 ,新版的直接用Request门面类。
@@ -556,9 +558,9 @@ class TestController extends Controller
     // 1614676054s:9:"嗯嗯呢";  前面是时间戳(代表缓存过期时间),s是字符串,9是字节数,缓存文件的名字就是键名进行编码的结果
 
     // 1 存入缓存
-    Cache::put('name', '哈哈哈', 10);
-    Cache::put('name', '嗯嗯呢', 10); // 覆盖了
-    Cache::add('name', '呃呃呃', 10); // 不覆盖
+    Cache::put('name', '哈哈哈', 1);
+    Cache::put('name', '嗯嗯呢', 60); // 覆盖了
+    Cache::add('name', '呃呃呃', 60); // 不覆盖
 
     // 9999999999s:19:"几乎永久9999999"; 
     Cache::forever('class', '几乎永久9999999'); // 不覆盖
@@ -583,16 +585,71 @@ class TestController extends Controller
 
     // dump(Cache::flush());  // 注释掉,避免影响下面的代码
 
-    // 5 递增递减 >> 可以做计数器
-    Cache::add('count','0',99999);
+    // 5 递增递减 
+    // 计数器案例:(实际不会这么做,只是例子)
+    Cache::add('count', '0', 99999);
     Cache::increment('count');
-    dump('您是当前第'.Cache::get('count').'访问者');
+    dump('您是当前第' . Cache::get('count') . '访问者');
 
 
     // 6 获取并存储
-
+    // 先尝试获取,如果没有获取到,就走回调函数,将函数返回值设置进缓存(可能是过期了,或者销毁了)
+    /* 注意:这个是秒,上面是分钟
+      $value = Cache::remember('users', $seconds, function () {
+          return DB::table('users')->get();
+      });
+    */
+    $data = Cache::remember('data', 10, function () {
+      return Member::find(5);
+    });
+    dump($data->name);
   }
+
+  /*
+    联表操作
+    
+    https://learnku.com/docs/laravel/8.x/queries/9401#joins
+    内连接 join('表名','字段1','条件符','字段2');
+    外连接 leftJoin()/rightJoin()也是一样
+
+    为了测试,先创建迁移文件php artisan make:migration create_article_table 和 php artisan make:migration create_author_table,执行迁移
+    创建填充器 php artisan make:seeder ArticleAndAuthorTableSeeder 复制资料的填充数据,执行php artisan db:seed --class=ArticleAndAuthorTableSeeder
+  */
   public function test14()
+  {
+    $data = DB::table('article as t1')
+      ->select('t1.id', 't1.article_name as article_name', 't2.author_name as author_name')
+      ->leftJoin('author as t2', 't1.author_id', '=', 't2.id')
+      ->get();
+
+    dump($data);
+  }
+
+  /*
+    关联模型
+    https://learnku.com/docs/laravel/8.x/eloquent-relationships/9407
+    1 创建模型 php artisan make:model Article 和 php artisan make:model Author
+    2 配置模型约定($table等)
+    3 确定主和从模型,谁是主模模型,就在其中写关联方法
+    */
+
+    // 一对一关系
+  public function test15()
+  {
+    $data = Article::all();
+    foreach ($data as $key => $value) {
+      // $value是模型对象
+      // 通过定义的关联方法获取联表字段,要通过动态属性调用关联方法(读取属性时自动调用同名方法),然后再拿到里面的属性值
+      echo '文章id:'.$value->id.'<br>';
+      echo '文章名称:'.$value->article_name.'<br>';
+      echo '文章作者:'.$value->relate_author->author_name.'<br>';
+      echo '<hr>';
+    }
+  }
+  public function test16()
+  {
+  }
+  public function test17()
   {
   }
 }

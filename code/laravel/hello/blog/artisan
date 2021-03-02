@@ -2,10 +2,10 @@
 <?php
 /*
   前面学过的artisan命令:
-  php artisan make:controller
-  php artisan make:model
-  php artisan make:migration
-  php artisan make:seeder
+  php artisan make:controller xxx
+  php artisan make:model xxx
+  php artisan make:migration xxx
+  php artisan make:seeder xxx
 
   php artisan migrate
   php artisan migrate:install
