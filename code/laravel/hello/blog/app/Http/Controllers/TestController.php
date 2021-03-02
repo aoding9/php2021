@@ -25,11 +25,12 @@ use Illuminate\Http\Request;
   use Input;
 */
 
-/* 
-  别名引入DB类
-*/
-use Illuminate\Support\Facades\DB;
+// 别名引入DB类
 // use DB;
+use Illuminate\Support\Facades\DB;
+
+// 别名引入缓存类
+use Cache;
 
 // 引入模型
 use App\Models\Member;
@@ -368,6 +369,7 @@ class TestController extends Controller
 
 
   //  表单验证，验证器的使用
+
   public function test9(Request $req)
   {
     /* 表单提交的一般步骤：
@@ -388,7 +390,7 @@ class TestController extends Controller
       'age' => 'required|integer|min:1|max:100',
       'email' => 'required|email',
       // captcha是验证码包的自带验证类型,另外翻译文件也要改
-      'captcha'=>'required|captcha'
+      'captcha' => 'required|captcha'
     ], [
       /* 如何显示成中文错误信息：
         1 在第三个参数自定义错误信息，比较繁琐
@@ -400,7 +402,16 @@ class TestController extends Controller
       'name.required' => '用户名不能为空',
       'age.required' => '年龄不能为空',
     ]);
-
+    /* 验证码 第三方包
+      使用说明:https://packagist.org/packages/mews/captcha
+      1 composer require mews/captcha 下载安装
+      2 config/app.php的providers添加 Mews\Captcha\CaptchaServiceProvider::class,
+      3 config/app.php的aliases添加'Captcha' => Mews\Captcha\Facades\Captcha::class,
+      4 php artisan vendor:publish创建默认配置文件,去config/captcha.php中修改length长度为4
+      5 视图里面创建input框输入验证码,然后调用captcha_src()或captcha_img()显示验证码图片
+      6 控制器接收,设置验证规则['captcha' => 'required|captcha']
+      7 修改翻译文件,添加captcha元素(要添加2个)
+    */
 
     /* 文件上传
       文档： https://learnku.com/docs/laravel/8.x/requests/9369#files
@@ -426,24 +437,23 @@ class TestController extends Controller
       $path = '/statics/uploads/' . $name;
     }
 
-    // 写入数据表,先排除token和原来的avatar,然后把路径添加进去
-    $data = $req->except(['_token', 'avatar']);
+    // 写入数据表,排除不需要的字段,然后把头像的路径添加进去
+    $data = $req->except(['_token', 'avatar', 'captcha']);
     $data['avatar'] = $path ?? '';
     $res = Member::insert($data);
 
-    // 返回结果
-    return $res ? 'OK' : 'Fail';
 
-    /* 验证码 第三方包
-     使用说明:https://packagist.org/packages/mews/captcha
-     1 composer require mews/captcha 下载安装
-     2 config/app.php的providers添加 Mews\Captcha\CaptchaServiceProvider::class,
-     3 config/app.php的aliases添加'Captcha' => Mews\Captcha\Facades\Captcha::class,
-     4 php artisan vendor:publish创建默认配置文件,去config/captcha.php中修改length长度为4
-     5 视图里面创建input框输入验证码,然后调用captcha_src()或captcha_img()显示验证码图片
-     6 控制器接收,设置验证规则['captcha' => 'required|captcha']
-     7 修改翻译文件,添加captcha元素(要添加2个)
+    // 返回结果
+    // return $res ? 'OK' : 'Fail';
+    /* 跳转响应
+      1 return redirect(路由)->withErrors([]);  带错误信息,模板用$errors获取
+      2 return redirect()->to(路由) 或者简写为return redirect(路由)  不带错误信息
     */
+    if ($res) {
+      return redirect('/');
+    } else {
+      return redirect('test8')->withErrors(['用户添加失败']);
+    }
   }
 
   // 分页
@@ -457,9 +467,132 @@ class TestController extends Controller
     return view('admin.test.test10', compact('data'));
   }
 
+  /*json响应
+    json_encode()需要手动指定header("Content-type:application/json"),否则是作为html返回
+    而response()->json() 自动设置了header为json
+  */
   public function test11()
   {
- 
+    $data = Member::all();
+    return response()->json($data);
+  }
 
+  /*
+    session的使用
+    https://learnku.com/docs/laravel/8.x/session/9373
+    1 配置 config/session.php
+    2 使用session
+    可以通过Request实例来使用,也可以用全局辅助函数session() 
+      方法1:
+        public function show(Request $request, $id)
+        {
+            $value = $request->session()->get('key');
+        }
+
+      方法2:
+      // 获取 session 中的一条数据...
+      $value = session('key');
+
+      // 指定默认值
+      $value = session('key', 'default');
+
+      // 在 Session 中存储一条数据...
+      session(['key' => 'value']);
+
+      也可以使用session()->get()/put()/all()/has()/forget() 等方法
+   */
+  public function test12()
+  {
+    // 存入
+    session(['name' => '呵呵呵']);
+    session()->put('age', '20');
+    // 获取
+    dump(session('name'));
+    dump(session()->get('age'));
+
+    // 默认值
+    dump(session('name1', '可以的'));
+    // 动态默认值
+    dump(session('name1', function () {
+      return rand(1, 10);
+    }));
+    // 获取所有
+    dump(session()->all());
+    // 删除
+    dump(session()->forget('name')); // null
+    dump(session()->all());
+
+    // 删除全部(框架会自动生成一些session数据,不用管他)
+    dump(session()->flush('name'));  // null
+
+    // 判断是否存在
+    dump(session()->has('name')); // false
+
+  }
+
+  /*
+    缓存操作
+    https://learnku.com/docs/laravel/8.x/cache/9389
+    1 配置文件 config/cache.php 默认为文件驱动
+    2 使用:
+      通过引入Cache Facade来使用
+    2 常用方法
+      Cache::put('key','value',$minutes)  有效期是分钟为单位的数字,如果键存在,则覆盖并刷新有效期
+      Cache::add('key','value',$minutes)  只有键不存在才添加
+
+      Cache::get()
+      Cache::pull()
+
+      Cache::forever() 持久化存储近似永久(有效期很长)
+      Cache::forget()
+      Cache::has()
+
+      Cache::incremnent('key')  递增递减
+      Cache::decrement('key')
+  */
+  public function test13()
+  {
+    // 查看storage/framework/cache下查看,是否多出data目录,下面出现/6a/e9目录(文件名前4位),最里面存着序列化后的缓存文件
+    // 1614676054s:9:"嗯嗯呢";  前面是时间戳(代表缓存过期时间),s是字符串,9是字节数,缓存文件的名字就是键名进行编码的结果
+
+    // 1 存入缓存
+    Cache::put('name', '哈哈哈', 10);
+    Cache::put('name', '嗯嗯呢', 10); // 覆盖了
+    Cache::add('name', '呃呃呃', 10); // 不覆盖
+
+    // 9999999999s:19:"几乎永久9999999"; 
+    Cache::forever('class', '几乎永久9999999'); // 不覆盖
+
+    // 2 获取
+    dump(Cache::get('name'));
+    dump(Cache::get('name2', '我是默认值'));
+    dump(Cache::get('name2', function () {
+      return '动态默认值';
+    }));
+
+    // 3 判断是否有
+    dump(Cache::has('name'));
+    dump(Cache::has('name22'));
+
+    // 4 删除
+    // pull是先获取,再删除,不存在则返回null,不删目录
+    dump(Cache::pull('name'));
+
+    // forget() /flush()和session一样,删一个和删全部,区别在于flush会同时删目录,前者不删
+    dump(Cache::forget('age'));
+
+    // dump(Cache::flush());  // 注释掉,避免影响下面的代码
+
+    // 5 递增递减 >> 可以做计数器
+    Cache::add('count','0',99999);
+    Cache::increment('count');
+    dump('您是当前第'.Cache::get('count').'访问者');
+
+
+    // 6 获取并存储
+
+  }
+  public function test14()
+  {
   }
 }

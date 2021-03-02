@@ -1,5 +1,24 @@
 #!/usr/bin/env php
 <?php
+/*
+  前面学过的artisan命令:
+  php artisan make:controller
+  php artisan make:model
+  php artisan make:migration
+  php artisan make:seeder
+
+  php artisan migrate
+  php artisan migrate:install
+  php artisan migrate:rolback
+
+  php artisan db:seed --class=SeederName
+
+  php artisan serve
+
+  php artisan route:list
+
+
+*/
 
 define('LARAVEL_START', microtime(true));
 

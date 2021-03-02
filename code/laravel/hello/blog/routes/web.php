@@ -124,12 +124,20 @@ Route::get('mod_select','TestController@mod_select');
 // 提交测试数据的表单
 Route::get('test8','TestController@test8');
 // 表单验证，验证器的使用
+// 跳转响应
 Route::post('test9','TestController@test9');
 
 // 分页
 Route::get('test10','TestController@test10');
 
-// Route::get('test10','TestController@test10');
-// Route::get('test10','TestController@test10');
-// Route::get('test10','TestController@test10');
-// Route::get('test10','TestController@test10');
+// json响应
+Route::get('test11','TestController@test11');
+
+// session的使用
+Route::get('test12','TestController@test12');
+
+// 缓存操作
+Route::get('test13','TestController@test13');
+
+
+Route::get('test14','TestController@test14');

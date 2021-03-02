@@ -40,10 +40,12 @@
         <td><img src="{{$v->avatar}}" ></td>
       </tr>
     @endforeach
+    
     </tbody>
   </table>
 
  <div class="page"> {{$data->links()}}</div>
+
 </body>
 
 </html>
