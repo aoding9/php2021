@@ -12,6 +12,7 @@ namespace App\Http\Controllers; // 声明命名空间
 // use App\Models\Member as ModelsMember;
 
 use App\Models\Article;
+use App\Models\Keyword;
 use Illuminate\Http\Request;
 
 // laravel 6.x 版本已经取消 Input Facades 了 ,新版的直接用Request门面类。
@@ -633,7 +634,7 @@ class TestController extends Controller
     3 确定主和从模型,谁是主模模型,就在其中写关联方法
     */
 
-    // 一对一关系
+    // 一对一关系:新闻对作者
   public function test15()
   {
     $data = Article::all();
@@ -646,10 +647,67 @@ class TestController extends Controller
       echo '<hr>';
     }
   }
+  /*
+    一对多:文章对评论
+    创建评论表 php artisan make:migration create_comment_table 执行迁移
+    创建填充器 php artisan make:seeder CommentTableSeeder 执行填充php artisan db:seed --class=CommentTableSeeder
+    创建评论模型 php artisan make:model Comment
+    定义关联方法  $this->hasMany('被关联模型的命名空间','被关联模型的关系字段','本模型中的关系字段')
+
+  */
   public function test16()
   {
+    $data = Article::all();
+    foreach ($data as $key => $value) {
+      echo '文章id:'.$value->id.'<br>';
+      echo '文章名称:'.$value->article_name.'<br>文章评论:<br>';
+      // 循环输出评论
+      foreach ($value->relate_comment as $key => $value2) {
+        // $value2就是评论模型实例 
+        echo '&emsp;'.$value2->comment.'<br>';
+      }
+      echo '<hr>';
+    }
   }
+
+  /*
+    多对多:文章对关键词
+    可以分解为多个 一对多 通过第三张关联关系表来建立联系
+    创建关系表 php artisan make:migration create_relation_table
+    创建关键词表 php artisan make:migration create_keyword_table ,,执行迁移
+    创建填充器 php artisan make:seeder KeywordTableSeeder ,,执行填充php artisan db:seed --class=KeywordAndRelationTableSeeder
+    创建关键词模型 php artisan make:model Keyword   (关系表不用创建模型)
+    定义关联方法(在每个需要查询的主模型中都要定义,类似多个一对多组成的)   $this->belongsToMany('被关联模型的命名空间','关联关系表名','主表关系键','从表关系键')
+
+  */
   public function test17()
   {
+    // 以文章为主,关联关键词
+    $data = Article::all();
+    foreach ($data as $key => $value) {
+      echo '文章id:'.$value->id.'<br>';
+      echo '文章名称:'.$value->article_name.'<br>文章关键词:<br>';
+      // 循环输出
+      foreach ($value->relate_keyword as $key => $value2) {
+        // $value2就是关键词模型实例 
+        echo '&emsp;'.$value2->keyword.'<br>';
+      }
+      echo '<hr>';
+    }
+
+    // 以关键词为主体,关联文章
+    echo '<hr><hr>';
+    $data2 = Keyword::all();
+    foreach ($data2 as $key => $value) {
+      echo '关键词id:'.$value->id.'<br>';
+      echo '关键词:'.$value->keyword.'<br>对应的文章:<br>';
+      // 循环输出
+      foreach ($value->relate_article as $key => $value2) {
+        // $value2就是文章模型实例 
+        echo '&emsp;'.$value2->article_name.'<br>';
+      }
+      echo '<hr>';
+    }
+
   }
 }
