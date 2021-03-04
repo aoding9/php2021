@@ -31,7 +31,8 @@ class PublicController extends Controller
 
     // 是否成功
     if ($result) {
-      return redirect()->route('index');
+      // 重定向到原本想要访问的url（被守卫拦截之前的url），没有就index
+      return redirect()->intended(route('index'));
     } else {
       return redirect()->route('login')->withErrors([
         'msg' => '用户名或密码错误'
