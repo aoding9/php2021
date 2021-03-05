@@ -30,11 +30,17 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Admin\Manager whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Admin\Manager whereUsername($value)
  * @mixin \Eloquent
+ * @property-read \App\Admin\Role $role
  */
 class Manager extends Model implements \Illuminate\Contracts\Auth\Authenticatable
 {
     //
     protected $table='manager';
     use \Illuminate\Auth\Authenticatable;
+
+    // 关联角色模型(role_id对id 一对一)
+    public function role(){
+      return $this->hasOne('App\Admin\Role','id','role_id');
+    }
 
 }

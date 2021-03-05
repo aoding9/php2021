@@ -35,6 +35,10 @@ Route::group(['prefix'=>'admin','middleware'=>'auth:admin'], function () {
   // 权限管理
   Route::get('auth/index','Admin\AuthController@index')->name('auth_index');
   Route::any('auth/add','Admin\AuthController@add')->name('auth_add');
+  
+  // 角色管理
+  Route::get('role/index','Admin\RoleController@index')->name('role_index');
+  Route::any('role/assign','Admin\RoleController@assign')->name('role_assign');
 });
 
 

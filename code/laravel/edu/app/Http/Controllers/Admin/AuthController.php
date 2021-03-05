@@ -12,7 +12,12 @@ class AuthController extends Controller
     // 权限管理
     public function index()
     {
-      return view('admin.auth.index');
+      // 这里没有采用DB写自关联,而是用模型写的
+      $data = Auth::get();
+    
+      // dd($data[2]->parent->auth_name);
+      // dd($data[0]->child[0]->child);
+      return view('admin.auth.index',compact('data'));
     }
     // 添加权限
     public function add(Request $request)

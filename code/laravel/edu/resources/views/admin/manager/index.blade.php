@@ -94,31 +94,31 @@
               style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
         </tr> --}}
 
-        @foreach ($data as $v)
+        @foreach ($data as $item)
         <tr class="text-c">
-          <td><input type="checkbox" value="{{ $v->id }}" name=""></td>
-          <td>{{ $v->id }}</td>
-          <td>{{ $v->username }}</td>
-          <td>{{ $v->mobile }}</td>
-          <td>{{ $v->email }}</td>
-          <td>{{ $v->role_id }}</td>
-          <td>{{ $v->created_at }}</td>
+          <td><input type="checkbox" value="{{ $item->id }}" name=""></td>
+          <td>{{ $item->id }}</td>
+          <td>{{ $item->username }}</td>
+          <td>{{ $item->mobile }}</td>
+          <td>{{ $item->email }}</td>
+          <td>{{ $item->role->role_name }}</td>
+          <td>{{ $item->created_at }}</td>
           <td class="td-status">
-            @if($v->status=='2')
+            @if($item->status=='2')
             <span class="label label-success radius">已启用</span>
             @else
             <span class="label radius">已停用</span>
             @endif
           </td>
           <td class="td-manage">
-            @if($v->status=='2')
+            @if($item->status=='2')
             <a style="text-decoration:none" onClick="admin_stop(this,'10001')" href="javascript:;" title="停用"><i class="Hui-iconfont">&#xe631;</i></a>
             @else
             <a style="text-decoration:none" onClick="admin_start(this,'10001')" href="javascript:;" title="启用"><i class="Hui-iconfont">&#xe615;</i></a>
             @endif
 
-            <a title="编辑" href="javascript:;" onclick="admin_edit('管理员编辑','admin-add.html','{{$v->id}}','800','500')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>
-            <a title="删除" href="javascript:;" onclick="admin_del(this,'{{$v->id}}')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+            <a title="编辑" href="javascript:;" onclick="admin_edit('管理员编辑','admin-add.html','{{$item->id}}','800','500')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>
+            <a title="删除" href="javascript:;" onclick="admin_del(this,'{{$item->id}}')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
           </td>
         </tr>
         @endforeach

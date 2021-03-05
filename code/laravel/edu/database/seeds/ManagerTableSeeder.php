@@ -12,7 +12,7 @@ class ManagerTableSeeder extends Seeder
   public function run()
   {
     //
-    $faker = \Faker\Factory::create('zh_CN');
+    /*     $faker = \Faker\Factory::create('zh_CN');
     $data = [];
     $data[] = [
       'username' => 'admin',
@@ -38,6 +38,9 @@ class ManagerTableSeeder extends Seeder
       ];
     }
 
-    DB::table('manager')->insert($data);
+    DB::table('manager')->insert($data); 
+  */
+  $users = factory(App\Admin\Manager::class, 10)->create();
+
   }
 }

@@ -1,4 +1,9 @@
 <!DOCTYPE HTML>
+<!-- 
+  执行正则替换操作
+"(static/|lib/)
+"/admin/$1
+ -->
 <html>
 
 <head>
@@ -47,7 +52,7 @@
         </nav>
         <nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
           <ul class="cl">
-            <li>超级管理员</li>
+            <li>{{$user->role->role_name}}</li>
             <li class="dropDown dropDown_hover">
               <a href="#" class="dropDown_A">{{$user->username}} <i class="Hui-iconfont">&#xe6d5;</i></a>
               <ul class="dropDown-menu menu radius box-shadow">
@@ -123,16 +128,24 @@
           </ul>
         </dd>
       </dl>
+      @foreach ($auths as $item)
+      @if($item['id']==1)
       <dl id="menu-admin">
-        <dt><i class="Hui-iconfont">&#xe62d;</i> 管理员管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+        <dt><i class="Hui-iconfont">&#xe62d;</i> {{$item['auth_name']}}<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
         <dd>
           <ul>
-            <li><a data-href="admin-role.html" data-title="角色管理" href="javascript:void(0)">角色管理</a></li>
-            <li><a data-href="{{route('auth_index')}}" data-title="权限管理" href="javascript:void(0)">权限管理</a></li>
-            <li><a data-href="{{route('manager_index')}}" data-title="管理员列表" href="javascript:void(0)">管理员列表</a></li>
+            @foreach ($item['child'] as $item1)
+            <li>
+              <a data-href="/admin/{{str_replace('controller','',strtolower($item1['controller']))}}/{{$item1['action']}}" data-title="{{$item1['auth_name']}}" href="javascript:void(0)">{{$item1['auth_name']}}
+          </a>
+          </li>
+            @endforeach
+           
           </ul>
         </dd>
       </dl>
+      @endif
+      @endforeach
       <dl id="menu-tongji">
         <dt><i class="Hui-iconfont">&#xe61a;</i> 系统统计<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
         <dd>

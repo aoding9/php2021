@@ -20,54 +20,43 @@
 <script type="text/javascript" src="/admin/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
-  <title>权限管理</title>
+  <title>角色管理</title>
 </head>
 
 <body>
-  <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 管理员管理 <span class="c-gray en">&gt;</span> 权限管理 
+  <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 管理员管理 <span class="c-gray en">&gt;</span> 角色管理 
   <a class="btn btn-success radius r btn-refresh" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
   <div class="page-container">
-    <div class="text-c">
-      <form class="Huiform" method="post" action="" target="_self">
-        <input type="text" class="input-text" style="width:250px" placeholder="权限名称" id="" name="">
-        <button type="submit" class="btn btn-success" id="" name=""><i class="Hui-iconfont">&#xe665;</i> 搜权限节点</button>
-      </form>
-    </div>
-    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a href="javascript:;" onclick="admin_permission_add('添加权限节点','/admin/auth/add','','400')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i>
-          添加权限节点</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div>
-    <table class="table table-border table-bordered table-bg">
+    <div class="cl pd-5 bg-1 bk-gray"> <span class="l"> <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a class="btn btn-primary radius" href="javascript:;" onclick="admin_role_add('添加角色','admin-role-add.html','800')"><i class="Hui-iconfont">&#xe600;</i> 添加角色</a> </span> <span class="r">共有数据：<strong>54</strong> 条</span> </div>
+    <table class="table table-border table-bordered table-hover table-bg">
       <thead>
         <tr>
-          <th scope="col" colspan="8">权限节点</th>
+          <th scope="col" colspan="6">角色管理</th>
         </tr>
         <tr class="text-c">
-          <th width="25"><input type="checkbox" name="" value=""></th>
-          <th width="40">ID</th>
-          <th width="150">权限名称</th>
-          <th width='150'>控制器名</th>
-          <th width='150'>方法名</th>
-          <th width='150'>父级权限</th>
-          <th width='150'>作为导航</th>
-          <th width="100">操作</th>
+          <th width="20"><input type="checkbox" value="" name=""></th>
+          <th width="20">ID</th>
+          <th width="100">角色名</th>
+          <th width='300'>权限id集合</th>
+          <th width="300">权限ac集合</th>
+          <th width="70">操作</th>
         </tr>
       </thead>
       <tbody>
-
-        @foreach ($data as $item)
+        @foreach($data as $item)
         <tr class="text-c">
           <td><input type="checkbox" value="{{$item->id}}" name=""></td>
           <td>{{$item->id}}</td>
-          <td>{{$item->auth_name}}</td>
-          <td>{{$item->controller??'N/A'}}</td>
-          <td>{{$item->action??'N/A'}}</td>
-          <td>{{$item->parent->auth_name??'顶级权限'}}</td>
-          <td>{{$item->is_nav}}</td>
-          <td>
-            <a title="编辑" href="javascript:;" onclick="admin_permission_edit('角色编辑','admin-permission-add.html','1','','310')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> <a title="删除" href="javascript:;" onclick="admin_permission_del(this,'1')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+          <td>{{$item->role_name}}</td>
+          <td>{{$item->auth_ids}}</td>
+          <td>{{$item->auth_ac}}</td>
+          <td class="f-14">
+            <a title="分配权限" href="javascript:;" onclick="admin_role_assign('分配权限','/admin/role/assign','{{$item->id}}','','600')" style="text-decoration:none"><i class="Hui-iconfont">&#xe603;</i></a> 
+            <a title="编辑" href="javascript:;" onclick="admin_role_edit('角色编辑','admin-role-add.html','1')" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> 
+            <a title="删除" href="javascript:;" onclick="admin_role_del(this,'1')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
           </td>
         </tr>
         @endforeach
-
       </tbody>
     </table>
   </div>
@@ -78,7 +67,6 @@
   <!--请在下方写此页面业务相关的脚本-->
   <script type="text/javascript" src="/admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
   <script type="text/javascript">
-    // 实例化datatables插件
     $('table').dataTable({
       columnDefs: [{
         targets: 0,
@@ -88,26 +76,22 @@
         [1, 'asc']
       ]
     })
-    /*
-	参数解释：
-	title	标题
-	url		请求的url
-	id		需要操作的数据id
-	w		弹出层宽度（缺省调默认值）
-	h		弹出层高度（缺省调默认值）
-*/
-    /*管理员-权限-添加*/
-    function admin_permission_add(title, url, w, h) {
+    /*管理员-角色-添加*/
+    function admin_role_add(title, url, w, h) {
       layer_show(title, url, w, h);
     }
-    /*管理员-权限-编辑*/
-    function admin_permission_edit(title, url, id, w, h) {
+    /*管理员-角色-编辑*/
+    function admin_role_edit(title, url, id, w, h) {
       layer_show(title, url, w, h);
     }
-
-    /*管理员-权限-删除*/
-    function admin_permission_del(obj, id) {
-      layer.confirm('确认要删除吗？', function(index) {
+    /*管理员-角色-分配权限*/
+    function admin_role_assign(title, url, id, w, h) {
+      url+='?id='+id;
+      layer_show(title, url, w, h);
+    }
+    /*管理员-角色-删除*/
+    function admin_role_del(obj, id) {
+      layer.confirm('角色删除须谨慎，确认要删除吗？', function(index) {
         $.ajax({
           type: 'POST',
           url: '',
