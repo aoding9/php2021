@@ -28,4 +28,13 @@ Route::group(['prefix' => 'admin/public'], function () {
 Route::group(['prefix'=>'admin','middleware'=>'auth:admin'], function () {
   Route::get('index/index', 'Admin\IndexController@index')->name('index');
   Route::get('index/welcome', 'Admin\IndexController@welcome')->name('welcome');
+
+  // 管理员管理
+  Route::get('manager/index', 'Admin\ManagerController@index')->name('manager_index');
+
+  // 权限管理
+  Route::get('auth/index','Admin\AuthController@index')->name('auth_index');
+  Route::any('auth/add','Admin\AuthController@add')->name('auth_add');
 });
+
+
