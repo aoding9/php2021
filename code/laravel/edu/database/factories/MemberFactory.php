@@ -12,7 +12,10 @@
 */
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-$factory->define(App\Admin\Manager::class, function (Faker\Generator $faker) {
+
+use Doctrine\DBAL\Types\SmallIntType;
+
+$factory->define(App\Admin\Member::class, function (Faker\Generator $faker) {
     // static $password;
 
     $faker = Faker\Factory::create('zh_CN');
@@ -22,8 +25,9 @@ $factory->define(App\Admin\Manager::class, function (Faker\Generator $faker) {
       'gender' => rand(1, 3),
       'mobile' => $faker->phoneNumber,
       'email' => $faker->email,
-      'role_id' => rand(1, 6),
+      'avatar'=> '/statics/avatar.jpg',
       'created_at' => date('Y-m-d H:i:s', time()),
-      'status' => rand(1, 2)
+      'type'=>rand(1,2),
+      'status' => rand(1, 2),
     ];
 });

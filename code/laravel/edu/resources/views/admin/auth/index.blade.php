@@ -58,8 +58,8 @@
           <td><input type="checkbox" value="{{$item->id}}" name=""></td>
           <td>{{$item->id}}</td>
           <td>{{$item->auth_name}}</td>
-          <td>{{$item->controller??'N/A'}}</td>
-          <td>{{$item->action??'N/A'}}</td>
+          <td>{{$item->controller?:'N/A'}}</td>
+          <td>{{$item->action?:'N/A'}}</td>
           <td>{{$item->parent->auth_name??'顶级权限'}}</td>
           <td>{{$item->is_nav}}</td>
           <td>

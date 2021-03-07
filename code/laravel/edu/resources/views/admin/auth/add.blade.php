@@ -51,8 +51,25 @@
         <div class="formControls col-xs-8 col-sm-9"> <span class="select-box" style="width:150px;">
             <select class="select" name="pid" size="1">
               <option value="0">作为顶级权限</option>
-              @foreach ($parents as $v)
-              <option value="{{$v->id}}">{{$v->auth_name}}</option>
+              @foreach ($auths as $i1)
+              <option value="{{$i1->id}}">
+              {{$i1->auth_name}}
+              </option>
+                  @foreach ($i1->child as $i2)
+                  <option value="{{$i2->id}}">
+                  - {{$i2->auth_name}}
+                  </option>
+                    @foreach ($i2->child as $i3)
+                    <option value="{{$i3->id}}">
+                    - - {{$i3->auth_name}}
+                    </option>
+                      @foreach ($i3->child as $i4)
+                      <option value="{{$i4->id}}">
+                      - - - {{$i4->auth_name}}
+                      </option>
+                      @endforeach
+                    @endforeach
+                  @endforeach
               @endforeach
             </select>
           </span>
@@ -139,7 +156,8 @@
                   time: 1000
                 }, function() {
                   var index = parent.layer.getFrameIndex(window.name);
-                  parent.$('.btn-refresh').click();
+                  parent.location.reload()
+
                   parent.layer.close(index);
                 });
               } else {

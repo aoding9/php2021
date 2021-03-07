@@ -39,8 +39,8 @@ class RoleController extends Controller
       // dd($auths);
       // dd($auths[0]->child[0]->child);
 
-      // dd(tree($auths));
       $auths = Auth::tree($auths);
+      // dd($auths);
       return view('admin.role.assign', compact('role', 'auths','auth_ids'));
     }
   }

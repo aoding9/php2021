@@ -40,7 +40,7 @@ class ManagerTableSeeder extends Seeder
 
     DB::table('manager')->insert($data); 
   */
-  $users = factory(App\Admin\Manager::class, 10)->create();
+  factory(App\Admin\Manager::class, 10)->create();
 
   }
 }

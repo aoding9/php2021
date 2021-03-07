@@ -47,27 +47,27 @@
           <dl class="permission-list">
             <dt>
               <label>
-                <input type="checkbox" value="{{$item['id']}}" name="auth_ids[]" id="user-Character-0" @if(in_array($item['id'],$auth_ids))checked @endif>
+                <input type="checkbox" value="{{$item->id}}" name="auth_ids[]" id="user-Character-0" @if(in_array($item->id,$auth_ids))checked @endif>
 
-                {{$item['auth_name']}}
+                {{$item->auth_name}}
               </label>
             </dt>
             <dd>
-              @foreach($item['child'] as $item1)
+              @foreach($item->child as $item1)
 
               <dl class="cl permission-list2">
                 <dt>
                   <label class="" style='font-weight: 700;'>
-                    <input type="checkbox" value="{{$item1['id']}}" name="auth_ids[]" id="user-Character-0-0" @if(in_array($item1['id'],$auth_ids))checked @endif>
-                    {{$item1['auth_name']}}
+                    <input type="checkbox" value="{{$item1->id}}" name="auth_ids[]" id="user-Character-0-0" @if(in_array($item1->id,$auth_ids))checked @endif>
+                    {{$item1->auth_name}}
                   </label>
                 </dt>
 
                 <dd>
-                  @foreach($item1['child'] as $item2)
+                  @foreach($item1->child as $item2)
                   <label class="">
-                    <input type="checkbox" value="{{$item2['id']}}" name="auth_ids[]" id="user-Character-0-0-0"  @if(in_array($item2['id'],$auth_ids))checked @endif>
-                    {{$item2['auth_name']}}
+                    <input type="checkbox" value="{{$item2->id}}" name="auth_ids[]" id="user-Character-0-0-0"  @if(in_array($item2->id,$auth_ids))checked @endif>
+                    {{$item2->auth_name}}
 
                   </label>
                   @endforeach

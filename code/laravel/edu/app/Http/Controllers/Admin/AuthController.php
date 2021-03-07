@@ -23,9 +23,9 @@ class AuthController extends Controller
     public function add(Request $request)
     {
       // 引入Input门面来判断请求类型(自己给自己提交)
-      // if(Input::method() == 'post'){
+      // if(Input::method() == 'POST'){
         // 这里用$request来搞
-      if(strtolower($request->getMethod()) == 'post'){
+      if($request->getMethod() == 'POST'){
         // 处理数据
         // 验证数据
         // 操作模型
@@ -34,7 +34,7 @@ class AuthController extends Controller
         // $result= Auth::insert($data);
         $auth = new Auth;
         $auth -> auth_name=$request->auth_name;
-        $auth -> controller=$request->controller;
+        $auth -> controller = strtolower($request->controller);
         $auth -> action=$request->action;
         $auth -> pid=$request->pid;
         $auth -> is_nav=$request->is_nav;
@@ -44,8 +44,12 @@ class AuthController extends Controller
       }else{
         // 查父级权限名称列表
         $parents = Auth::where('pid','=','0')->get();
+
+        // 权限树
+        $auths = Auth::tree(Auth::get());
+        // dd($auths);
         // 展示视图
-        return view('admin.auth.add',compact('parents'));
+        return view('admin.auth.add',compact('parents','auths'));
       }
     }
 }

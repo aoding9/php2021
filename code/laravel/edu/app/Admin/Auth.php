@@ -49,12 +49,17 @@ class Auth extends Model
   // 
   static public function tree($auths, $pid = 0, $tree = [])
   {
+    // 0级权限为顶级
+    static $level = 1;
     foreach ($auths as $key => $value) {
       if ($value['attributes']['pid'] == $pid) {
-        $tree[$key] =  $value['attributes'];
+        $tree[$key] =  (Object)$value['attributes'];
+        $tree[$key]->level =  $level;
         if (!empty($value->child)) {
-          $tree[$key]['child'] =  self::tree($value->child, $value['attributes']['id']);
+          $level++;
+          $tree[$key]->child =  self::tree($value->child, $value['attributes']['id']);
         } else {
+          $level=1;
           return $value['attributes'];
         }
       }

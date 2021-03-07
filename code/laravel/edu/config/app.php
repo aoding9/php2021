@@ -178,8 +178,12 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        // ide助手 代码提示
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        // 验证码
         Mews\Captcha\CaptchaServiceProvider::class,
+        // 七牛
+        zgldh\QiniuStorage\QiniuFilesystemServiceProvider::class,
     ],
 
     /*
@@ -205,6 +209,7 @@ return [
         'Config' => Illuminate\Support\Facades\Config::class,
         'Cookie' => Illuminate\Support\Facades\Cookie::class,
         'Crypt' => Illuminate\Support\Facades\Crypt::class,
+        // db门面
         'DB' => Illuminate\Support\Facades\DB::class,
         'Eloquent' => Illuminate\Database\Eloquent\Model::class,
         'Event' => Illuminate\Support\Facades\Event::class,
@@ -230,6 +235,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Captcha' => Mews\Captcha\Facades\Captcha::class,
+        // input门面
         'Input' => Illuminate\Support\Facades\Input::class,
     ],
 

@@ -62,6 +62,22 @@ return [
             'region' => env('AWS_REGION'),
             'bucket' => env('AWS_BUCKET'),
         ],
+        // 七牛
+        'qiniu' => [
+          'driver'  => 'qiniu',
+          'domains' => [
+              'default'   => 'php2021.aoding9.top', //你的七牛域名
+              'https'     => '',         //你的HTTPS域名
+              'custom'    => '',                //Useless 没啥用，请直接使用上面的 default 项
+           ],
+          'access_key'=> 'zGz00EIoHS1oricfsfEKdcDNypzylngZRYUEP83W',  //AccessKey
+          'secret_key'=> 'c0P_G_EbKMHnZiMGp6TEcqLQdwwM394ovpNAiBd2',  //SecretKey
+          'bucket'    => 'php2021',  //Bucket名字
+          'notify_url'=> '',  //持久化处理回调地址
+          'access'    => 'public',  //空间访问控制 public 或 private
+          'hotlink_prevention_key' => '', // CDN 时间戳防盗链的 key。 设置为 null 则不启用本功能。
+//            'hotlink_prevention_key' => 'cbab68a279xxxxxxxxxxab509a', // 同上，备用
+      ],
 
     ],
 

@@ -25,7 +25,9 @@ Route::group(['prefix' => 'admin/public'], function () {
   Route::post('check', 'Admin\PublicController@check')->name('check');
   Route::get('logout', 'Admin\PublicController@logout')->name('logout');
 });
-Route::group(['prefix'=>'admin','middleware'=>'auth:admin'], function () {
+
+
+Route::group(['prefix'=>'admin','middleware'=>['auth:admin','checkRbac']], function () {
   Route::get('index/index', 'Admin\IndexController@index')->name('index');
   Route::get('index/welcome', 'Admin\IndexController@welcome')->name('welcome');
 
@@ -39,6 +41,15 @@ Route::group(['prefix'=>'admin','middleware'=>'auth:admin'], function () {
   // 角色管理
   Route::get('role/index','Admin\RoleController@index')->name('role_index');
   Route::any('role/assign','Admin\RoleController@assign')->name('role_assign');
+  
+  // 会员管理
+  Route::get('member/index','Admin\MemberController@index')->name('member_index');
+  Route::any('member/add','Admin\MemberController@add')->name('member_add');
+  Route::get('member/getareabyid','Admin\MemberController@getAreaById')->name('member_getAreaById'); // ajax地区四级联动
+  
+  // 头像上传
+  Route::post('uploader/webuploader','Admin\UploaderController@webuploader')->name('webuploader'); // 文件上传
+  Route::post('uploader/qiniu','Admin\UploaderController@qiniu')->name('qiniu'); // 七牛文件上传
 });
 
 

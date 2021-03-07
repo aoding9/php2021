@@ -118,7 +118,7 @@
         <dt><i class="Hui-iconfont">&#xe60d;</i> 会员管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
         <dd>
           <ul>
-            <li><a data-href="member-list.html" data-title="会员列表" href="javascript:;">会员列表</a></li>
+            <li><a data-href="{{route('member_index')}}" data-title="会员列表" href="javascript:;">会员列表</a></li>
             <li><a data-href="member-del.html" data-title="删除的会员" href="javascript:;">删除的会员</a></li>
             <li><a data-href="member-level.html" data-title="等级管理" href="javascript:;">等级管理</a></li>
             <li><a data-href="member-scoreoperation.html" data-title="积分管理" href="javascript:;">积分管理</a></li>
@@ -129,18 +129,21 @@
         </dd>
       </dl>
       @foreach ($auths as $item)
-      @if($item['id']==1)
+      @if($item->id==1)
       <dl id="menu-admin">
-        <dt><i class="Hui-iconfont">&#xe62d;</i> {{$item['auth_name']}}<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+
+        <dt><i class="Hui-iconfont">&#xe62d;</i> {{$item->auth_name}}<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
         <dd>
           <ul>
-            @foreach ($item['child'] as $item1)
+            @foreach ($item->child as $item1)
+            @if ($item1->is_nav=='1')
             <li>
-              <a data-href="/admin/{{str_replace('controller','',strtolower($item1['controller']))}}/{{$item1['action']}}" data-title="{{$item1['auth_name']}}" href="javascript:void(0)">{{$item1['auth_name']}}
-          </a>
-          </li>
+              <a data-href="/admin/{{str_replace('controller','',$item1->controller)}}/{{$item1->action}}" data-title="{{$item1->auth_name}}" href="javascript:void(0)">{{$item1->auth_name}}
+              </a>
+            </li>
+            @endif
             @endforeach
-           
+
           </ul>
         </dd>
       </dl>
