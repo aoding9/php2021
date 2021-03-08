@@ -50,6 +50,11 @@ Route::group(['prefix'=>'admin','middleware'=>['auth:admin','checkRbac']], funct
   // 头像上传
   Route::post('uploader/webuploader','Admin\UploaderController@webuploader')->name('webuploader'); // 文件上传
   Route::post('uploader/qiniu','Admin\UploaderController@qiniu')->name('qiniu'); // 七牛文件上传
+  
+  // 专业列表和专业分类
+  Route::get('protype/index','Admin\ProtypeController@index')->name('protype_index'); // 专业分类
+  Route::get('profession/index','Admin\ProfessionController@index')->name('profession_index'); // 专业分类
+
 });
 
 

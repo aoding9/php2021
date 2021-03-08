@@ -77,7 +77,7 @@ return [
           'access'    => 'public',  //空间访问控制 public 或 private
           'hotlink_prevention_key' => '', // CDN 时间戳防盗链的 key。 设置为 null 则不启用本功能。
 //            'hotlink_prevention_key' => 'cbab68a279xxxxxxxxxxab509a', // 同上，备用
-      ],
+        ],
 
     ],
 
