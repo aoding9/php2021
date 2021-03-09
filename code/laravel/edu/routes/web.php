@@ -19,7 +19,8 @@
   php artisan ide-helper:meta - 生成 PhpStorm Meta file
 
   */
-
+// phpinfo();
+// die;
 Route::group(['prefix' => 'admin/public'], function () {
   Route::get('login', 'Admin\PublicController@login')->name('login');
   Route::post('check', 'Admin\PublicController@check')->name('check');
@@ -47,13 +48,25 @@ Route::group(['prefix'=>'admin','middleware'=>['auth:admin','checkRbac']], funct
   Route::any('member/add','Admin\MemberController@add')->name('member_add');
   Route::get('member/getareabyid','Admin\MemberController@getAreaById')->name('member_getAreaById'); // ajax地区四级联动
   
-  // 头像上传
+  // 文件上传
   Route::post('uploader/webuploader','Admin\UploaderController@webuploader')->name('webuploader'); // 文件上传
   Route::post('uploader/qiniu','Admin\UploaderController@qiniu')->name('qiniu'); // 七牛文件上传
   
-  // 专业列表和专业分类
+  // 专业管理
   Route::get('protype/index','Admin\ProtypeController@index')->name('protype_index'); // 专业分类
   Route::get('profession/index','Admin\ProfessionController@index')->name('profession_index'); // 专业分类
+  
+  // 课程管理
+  Route::get('course/index','Admin\CourseController@index'); // 课程列表
+  Route::get('lesson/index','Admin\LessonController@index'); // 课时列表
+  Route::get('lesson/play','Admin\LessonController@play'); // 播放
+  
+  // 试卷管理
+  Route::get('paper/index','Admin\PaperController@index'); // 列表
+  Route::get('question/index','Admin\QuestionController@index'); 
+  Route::get('question/export','Admin\QuestionController@export');  // 导出
+  Route::any('question/import','Admin\QuestionController@import');  // 导入
+
 
 });
 

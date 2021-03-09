@@ -169,6 +169,15 @@ return [
          * Package Service Providers...
          */
         Laravel\Tinker\TinkerServiceProvider::class,
+        // laravel-excel
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+        // ide助手 代码提示
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        // 验证码
+        Mews\Captcha\CaptchaServiceProvider::class,
+        // 七牛
+        zgldh\QiniuStorage\QiniuFilesystemServiceProvider::class,
+
 
         /*
          * Application Service Providers...
@@ -178,12 +187,6 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        // ide助手 代码提示
-        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
-        // 验证码
-        Mews\Captcha\CaptchaServiceProvider::class,
-        // 七牛
-        zgldh\QiniuStorage\QiniuFilesystemServiceProvider::class,
     ],
 
     /*
@@ -237,6 +240,7 @@ return [
         'Captcha' => Mews\Captcha\Facades\Captcha::class,
         // input门面
         'Input' => Illuminate\Support\Facades\Input::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];
