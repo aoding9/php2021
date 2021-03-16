@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GateController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -89,8 +90,7 @@ Route::get('test1_2','Admin\TestController@test1_2');
 
 // 新版写法: 手动引入控制器的命名空间
 // 更新说明: https://learnku.com/docs/laravel/8.x/releases/9351#d99737
-use App\Http\Controllers\TestController;
-Route::get('/test1_2', [TestController::class, 'test1_2']);
+Route::get('/test1_2', [App\Http\Controllers\TestController::class, 'test1_2']);
 
 // 感觉旧版写起来方便点,先用旧版吧
 
@@ -149,3 +149,11 @@ Route::get('test15','TestController@test15');
 Route::get('test16','TestController@test16');
 // 多对多
 Route::get('test17','TestController@test17');
+
+
+
+// 权限
+use App\Http\Controllers\AuthController;
+use App\Models\Member;
+
+Route::get('auth/index/{id?}/{a?}',[AuthController::class,'index'])->middleware('rbac')->name(Member::first()->email);
