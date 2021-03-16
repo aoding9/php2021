@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,9 +16,21 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+  return view('welcome');
 });
 
 // Route::match(['get','post'],'/test1',[TestController::class,'test1']);
-Route::get('/test1',[TestController::class,'test1']);
-Route::post('/test1_1',[TestController::class,'test1_1']);
+Route::get('test1', [TestController::class, 'test1'])->name('login');
+Route::post('test1_1', [TestController::class, 'test1_1']);
+Route::get('logout', [TestController::class, 'logout'])->name('logout');
+
+Route::middleware(['auth:web','rbac'])->group(function () {
+  Route::get('test2', [TestController::class, 'test2'])->name('index');
+
+  Route::name('auth.')->prefix('auth')->group(function () {
+    Route::get('index', [AuthController::class, 'index'])->name('index');
+    Route::get('update/{name}/{id?}', [AuthController::class, 'update'])->name('update');
+    Route::get('add', [AuthController::class, 'add'])->name('add');
+  });
+
+});
