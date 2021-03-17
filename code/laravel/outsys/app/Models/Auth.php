@@ -60,6 +60,17 @@ class Auth extends Model
   }
 
   // 自关联,子级权限对id 一对多
+  public function children2($pid = 0, $role_id = -1, $is_menu = -1, $status = -1)
+  {
+    $menu_symbol =  $is_menu == -1 ? '<>' : '=';
+    $status_symbol =  $status == -1 ? '<>' : '=';
+
+    return $this
+    ->hasMany(get_class($this), 'pid', 'id')
+    
+    ->orderBy('sort');
+  }
+
   // 参数是查询条件
   static public function children($pid = 0, $role_id = -1, $is_menu = -1, $status = -1)
   {
@@ -71,14 +82,14 @@ class Auth extends Model
     // 如果传了角色id,那么就用连表查询,模型关联写这个不太好弄,条件太多了
     if ($role_id != -1) {
       // 获取权限
-      $auths = DB::table('role_auth as t1')  // 结合中间表进行关联查询
-        ->leftJoin('auth as t2', 't1.auth_id', 't2.id')
-        ->where('pid', $pid)
-        ->where('role_id', $role_id)
-        ->where('status', $status_symbol, $status)
-        ->where('is_menu', $menu_symbol, $is_menu)
+      $auths = DB::table('role_auth as t1')  // 结合关系表进行关联查询
+        ->leftJoin('auth as t2', 't1.auth_id', 't2.id') 
+        ->where('pid', $pid) // 父级权限id
+        ->where('role_id', $role_id) // 角色id
+        ->where('status', $status_symbol, $status) // 是否启用
+        ->where('is_menu', $menu_symbol, $is_menu) // 是否为菜单
         ->whereNull('deleted_at') // 软删除
-        ->orderBy('t2.sort')
+        ->orderBy('t2.sort') // 排序
         ->get();
 
       // dump($auths);

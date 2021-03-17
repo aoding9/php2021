@@ -50,8 +50,12 @@ class TestController extends Controller
     // $tree = AuthModel::tree(Auth::user()->role,true);
     // $tree = AuthModel::tree(Auth::user()->role->auth);
     $tree = AuthModel::tree(1,1,1);
+    $auths = AuthModel::find(5)->children2;
+    foreach ($auths as $key => $value) {
+      dump($value->sort);
+    }
     // $tree = AuthModel::tree2([],0,1,1,1);
-    dump($tree);
+    // dump($tree);
     // dd($auths[4]->children);
     // foreach ($auths[4]->children as $key => $value) {
     //   dump($value->auth_name);
