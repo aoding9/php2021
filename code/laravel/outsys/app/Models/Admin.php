@@ -37,6 +37,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Admin whereUnitId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Admin whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \App\Models\Role|null $role
  */
 class Admin extends Model implements Authenticatable
 {

@@ -48,7 +48,14 @@ class TestController extends Controller
     // dd($id);
     // dd(Auth::check());
     // $tree = AuthModel::tree(Auth::user()->role,true);
-    $tree = AuthModel::tree(Auth::user()->role);
+    // $tree = AuthModel::tree(Auth::user()->role->auth);
+    $tree = AuthModel::tree(1,1,1);
+    // $tree = AuthModel::tree2([],0,1,1,1);
+    dump($tree);
+    // dd($auths[4]->children);
+    // foreach ($auths[4]->children as $key => $value) {
+    //   dump($value->auth_name);
+    // }
     return view('test2', compact('tree'));
   }
   public function logout()

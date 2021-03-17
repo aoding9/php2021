@@ -8,6 +8,8 @@
 </head>
 <body>
   <a href="/logout">退出</a>
+  
+
   @foreach ($tree as $i)
   <hr>
   + <a href="{{$i->path?$i->path:'javascript:;'}}"> {{$i->auth_name}}</a><br>

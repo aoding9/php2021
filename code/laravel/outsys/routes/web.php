@@ -20,17 +20,17 @@ Route::get('/', function () {
 });
 
 // Route::match(['get','post'],'/test1',[TestController::class,'test1']);
-Route::get('test1', [TestController::class, 'test1'])->name('login');
+Route::get('login', [TestController::class, 'test1'])->name('login');
 Route::post('test1_1', [TestController::class, 'test1_1']);
 Route::get('logout', [TestController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth:web','rbac'])->group(function () {
-  Route::get('test2', [TestController::class, 'test2'])->name('index');
+  Route::get('index', [TestController::class, 'test2'])->name('index');
 
   Route::name('auth.')->prefix('auth')->group(function () {
     Route::get('index', [AuthController::class, 'index'])->name('index');
     Route::get('update/{name}/{id?}', [AuthController::class, 'update'])->name('update');
-    Route::get('add', [AuthController::class, 'add'])->name('add');
+    Route::any('add', [AuthController::class, 'add'])->name('add');
   });
 
 });

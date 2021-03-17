@@ -17,15 +17,25 @@ class AuthController extends Controller
   }
   public function add(Request $request)
   {
-    if (Gate::allows('add-auth')) {
-      dd('有权限');
-      return view('auth.add');
+    // if (Gate::allows('add-auth')) {
+    //   dd('有权限');
+    //   return view('auth.add');
+    // }
+    // dd('没权限');
+
+    if($request->method()=='POST'){
+      $auth = new AuthModel;
+      $data= $request->except(['_token']);
+      $auth->insert($data);
+      
+
     }
-    dd('没权限');
+      $tree = AuthModel::tree(0, 1, 1, 1);
+      return view('auth.add', compact('tree'));
   }
   public function update(Request $request)
   {
- 
-    return view('auth.update');
+    $tree = AuthModel::tree(0, 1, 1, 1);
+    return view('auth.update', compact('tree'));
   }
 }
