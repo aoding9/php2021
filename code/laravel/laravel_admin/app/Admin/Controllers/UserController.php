@@ -35,6 +35,18 @@ class UserController extends AdminController
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 
+        // 一对一关联
+        $grid->column('profile.age','年龄')->display(function($age){
+            return "$age";
+        });
+        $grid->column('profile.gender','性别')->display(function($gender){
+            return $gender?'男':'女';
+        });
+        //or
+        // $grid->profile()->age();
+        // $grid->profile()->gender();
+
+
         return $grid;
     }
 
