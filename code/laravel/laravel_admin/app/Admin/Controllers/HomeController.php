@@ -12,7 +12,7 @@ class HomeController extends Controller
 {
     public function index(Content $content)
     {
-        return $content
+        // return $content
             // ->title('我是标题')
             // ->description('我是描述')
             // ->row(Dashboard::title())
@@ -21,7 +21,7 @@ class HomeController extends Controller
             //         $column->append(Dashboard::environment());
             //     });
             // });
-            ->row(function (Row $row) {
+           /*  ->row(function (Row $row) {
                 $row->column(4, 'xxx');
 
                 $row->column(8, function (Column $column) {
@@ -29,25 +29,25 @@ class HomeController extends Controller
                     $column->row('222');
                     $column->row('333');
                 });
+            }); */
+
+        return $content
+            ->title('Dashboard')
+            ->description('Description...')
+            ->row(Dashboard::title())
+            ->row(function (Row $row) {
+
+                $row->column(4, function (Column $column) {
+                    $column->append(Dashboard::environment());
+                });
+
+                $row->column(4, function (Column $column) {
+                    $column->append(Dashboard::extensions());
+                });
+
+                $row->column(4, function (Column $column) {
+                    $column->append(Dashboard::dependencies());
+                });
             });
-
-        // return $content
-        //     ->title('Dashboard')
-        //     ->description('Description...')
-        //     ->row(Dashboard::title())
-        //     ->row(function (Row $row) {
-
-        //         $row->column(4, function (Column $column) {
-        //             $column->append(Dashboard::environment());
-        //         });
-
-        //         $row->column(4, function (Column $column) {
-        //             $column->append(Dashboard::extensions());
-        //         });
-
-        //         $row->column(4, function (Column $column) {
-        //             $column->append(Dashboard::dependencies());
-        //         });
-        //     });
     }
 }

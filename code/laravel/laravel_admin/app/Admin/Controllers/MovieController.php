@@ -4,14 +4,13 @@ namespace App\Admin\Controllers;
 
 use App\Models\Movie;
 use App\Models\User;
+use DB;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
-
-
-
+use Encore\Admin\Widgets\Box;
 
 // 依赖注入,把被依赖的对象的实例化过程拿到类的外面进行,修改一个时,不需要去修改另一个,实现解耦
 // 原理:php检测到index2需要Haha类型的参数时,会触发构造方法,从而初始化一些东西,比如查数据什么的(__get也可以触发)
@@ -37,9 +36,9 @@ class MovieController extends AdminController
     protected $haha;
     public function __construct(Haha $haha)
     {
-        $this->haha=$haha->getHaha();
+        $this->haha = $haha->getHaha();
     }
-    
+
     public function index2(Haha $haha)
     {
         dump($this->haha);
@@ -82,6 +81,7 @@ class MovieController extends AdminController
             // dump($userId);
 
             // dd(User::factory()->count(10)->create());
+            // dump(User::find($userId));
             // dd(User::find($userId)->name);
             return User::find($userId)->name;
         });
@@ -146,6 +146,29 @@ class MovieController extends AdminController
             });
         });
 
+        // 导出
+        $grid->export(function ($export) {
+            // dump($export);
+
+            // 指定导出的文件名
+            $export->filename('movies.csv');
+
+            // 排除
+            $export->except(['created_at', 'updated_at']);
+
+            // 只导出
+            $export->only(['id', 'title', 'rate', 'describe']);
+
+            // 导出原始数据(因为字段被处理后可能是html内容)
+            $export->originalValue(['released', 'release_at']);
+
+            // 自定义导出实现,$value是修改后的数据,$original是原始数据
+            $export->column('column_5', function ($value, $original) {
+                return $value;
+            });
+        });
+
+
         return $grid;
     }
 
@@ -179,14 +202,93 @@ class MovieController extends AdminController
      */
     protected function form()
     {
-        $form = new Form(new Movie());
+        /* $form = new Form(new Movie());
 
         $form->text('title', __('Title'));
         $form->number('director', __('Director'));
         $form->text('describe', __('Describe'));
         $form->switch('rate', __('Rate'));
         $form->text('released', __('Released'));
-        $form->datetime('release_at', __('Release at'))->default(date('Y-m-d H:i:s'));
+        $form->datetime('release_at', __('Release at'))->default(date('Y-m-d H:i:s')); */
+
+        $form = new Form(new Movie);
+
+        // 显示记录id
+        $form->display('id', 'ID');
+
+        // 添加text类型的input框
+        $form->text('title', '电影标题');
+
+        $directors = [
+            1 => 'John',
+            2 => 'Smith',
+            3 => 'Kate',
+        ];
+
+        $form->select('director', '导演')->options($directors);
+
+        // 添加describe的textarea输入框
+        $form->textarea('describe', '简介');
+
+        // 数字输入框
+        $form->number('rate', '打分');
+
+        // 添加开关操作
+        $form->switch('released', '发布？');
+
+        // 添加日期时间选择框
+        $form->datetime('release_at', '发布时间');
+
+        // 两个时间显示
+        $form->display('created_at', '创建时间');
+        $form->display('updated_at', '修改时间');
+
+        // 右上角工具栏
+        /* $form->tools(function (Form\Tools $tools) {
+
+            // 去掉`列表`按钮
+            $tools->disableList();
+        
+            // 去掉`删除`按钮
+            $tools->disableDelete();
+        
+            // 去掉`查看`按钮
+            $tools->disableView();
+        
+            // 添加一个按钮, 参数可以是字符串, 或者实现了Renderable或Htmlable接口的对象实例
+            $tools->append('<a class="btn btn-sm btn-danger"><i class="fa fa-trash"></i>&nbsp;&nbsp;delete</a>');
+        }); */
+        // 设置宽度
+        $form->setWidth(10, 2);
+
+        // 设置提交的action
+        // $form->setAction('admin/users');
+
+        // 底部
+        /*  $form->footer(function ($footer) {
+
+            // 去掉`重置`按钮
+            $footer->disableReset();
+        
+            // 去掉`提交`按钮
+            $footer->disableSubmit();
+        
+            // 去掉`查看`checkbox
+            $footer->disableViewCheck();
+        
+            // 去掉`继续编辑`checkbox
+            $footer->disableEditingCheck();
+        
+            // 去掉`继续创建`checkbox
+            $footer->disableCreatingCheck();
+        
+        }); */
+
+        $form->confirm('确定更新吗？', 'edit');
+
+        $form->confirm('确定创建吗？', 'create');
+
+        $form->confirm('确定提交吗？');
 
         return $form;
     }

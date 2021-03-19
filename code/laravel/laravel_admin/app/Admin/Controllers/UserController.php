@@ -2,11 +2,15 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\Tools\UserGender;
 use App\Models\User;
+use DB;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Widgets\Box;
+use Request;
 
 class UserController extends AdminController
 {
@@ -26,7 +30,19 @@ class UserController extends AdminController
     {
         $grid = new Grid(new User());
 
-        $grid->column('id', __('Id'));
+
+        // 自定义头部工具的配合
+        if (in_array(Request::get('gender'), [ '1','0'])) {
+            $grid->model()->where('gender', Request::get('gender'));
+        }
+
+
+        // totalRow 追加统计行
+        $grid->column('id', __('Id'))->totalRow(function ($id) {
+
+            return "<span class='text-danger text-bold'> id合计 {$id} </span>";
+        
+        });
         $grid->column('name', __('Name'));
         $grid->column('email', __('Email'));
         $grid->column('email_verified_at', __('Email verified at'));
@@ -36,17 +52,46 @@ class UserController extends AdminController
         $grid->column('updated_at', __('Updated at'));
 
         // 一对一关联
-        $grid->column('profile.age','年龄')->display(function($age){
+        $grid->column('profile.age', '年龄')->display(function ($age) {
             return "$age";
         });
-        $grid->column('profile.gender','性别')->display(function($gender){
-            return $gender?'男':'女';
+        // $grid->column('profile.gender', '性别')->display(function ($gender) {
+        //     return $gender ? '男' : '女';
+        // });
+        $grid->column('gender', '性别')->display(function ($gender) {
+            return $gender ? '男' : '女';
         });
+
+
         //or
         // $grid->profile()->age();
         // $grid->profile()->gender();
 
+        // 头部和底部
+        $grid->header(function ($query) {
+            $gender = $query->select(DB::raw('count(gender) as count, gender'))
+                ->groupBy('gender')->get()->pluck('count', 'gender')->toArray();
 
+            $doughnut = view('admin.chart.gender', compact('gender'));
+
+            return new Box('性别比例', $doughnut);
+        });
+
+        $grid->footer(function ($query) {
+            // 查询出人数count 金额合计用sum
+            $data = $query->where('gender', 0)->count();
+
+            return "<div style='padding: 10px;'>男性人数 ： $data</div>";
+        });
+
+        // 快捷搜索
+        $grid->quickSearch(function ($model, $query) {
+            $model->where('name','like', "%{$query}%")->orWhere('email', 'like', "%{$query}%");
+        });
+
+        $grid->tools(function ($tools) {
+            $tools->append(new UserGender());
+        });
         return $grid;
     }
 

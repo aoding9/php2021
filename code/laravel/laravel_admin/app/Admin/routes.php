@@ -24,5 +24,8 @@ Route::group([
   $router->resource('posts', PostController::class);
   $router->resource('comments', CommentController::class);
 
+    //   批量改文章接口
+  $router->post('posts/release', 'PostController@release');
+
 //   $router->get('movies/test1', 'MovieController@index')->name('test1');
 });

@@ -12,7 +12,10 @@ use Encore\Admin\Show;
 use Encore\Admin\Widgets\Table;
 use App\Admin\Renderable\ShowComments;
 use App\Admin\Actions\Post\Replicate;
-
+use App\Admin\Actions\Post\Restore;
+use App\Admin\Extensions\Tools\ReleasePost;
+use Request;
+use App\Admin\Actions\Post\BatchRestore;
 
 
 class PostController extends AdminController
@@ -162,7 +165,7 @@ class PostController extends AdminController
         });
 
         // 操作列
-        
+
         $grid->actions(function ($actions) {
             $actions->add(new Replicate);
         });
@@ -171,9 +174,51 @@ class PostController extends AdminController
         $grid->batchActions(function ($batch) {
             $batch->add(new BatchReplicate());
         });
+
+        // 批量改文章
+        $grid->tools(function ($tools) {
+            $tools->batch(function ($batch) {
+                $batch->add('发布文章', new ReleasePost(1));
+                $batch->add('文章下线', new ReleasePost(0));
+            });
+        });
+
+        $grid->column('action');
+
+        // 回收站,软删除,恢复
+        $grid->filter(function ($filter) {
+
+            // 范围过滤器，调用模型的`onlyTrashed`方法，查询出被软删除的数据。
+            $filter->scope('trashed', '回收站')->onlyTrashed();
+        });
+        $grid->actions(function ($actions) {
+
+            if (\request('_scope_') == 'trashed') {
+                $actions->add(new Restore());
+            }
+        });
+
+        // 批量恢复
+
+        $grid->batchActions(function ($batch) {
+
+            if (\request('_scope_') == 'trashed') {
+                $batch->add(new BatchRestore());
+            }
+        });
+
         return $grid;
     }
-
+    // 批量改文章的接口方法
+    public function release()
+    {
+        // dump($request);
+        $ids = request()->get('ids');
+        foreach (Post::find($ids) as $post) {
+            $post->action = request()->get('action');
+            $post->save();
+        }
+    }
     /**
      * Make a show builder.
      *
