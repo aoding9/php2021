@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Models\Comment;
+use Illuminate\Database\Eloquent\Collection;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -28,7 +29,36 @@ class CommentController extends AdminController
 
         $grid = new Grid(new Comment());
 
+
+        $grid->model()->collection(function (Collection $collection) {
+
+            // dd($collection);
+            // 1. 可以给每一列加字段，类似上面display回调的作用
+            // foreach($collection as $item) {
+            //     $item->full_name = $item->first_name . ' ' . $item->last_name;
+            // }
+            
+            // 2. 给表格加一个序号列
+            foreach($collection as $index => $item) {
+                $item->number = $index;
+                // dump($item);
+                // $item->content = $item->$content;
+            }
+        
+            // 3. 从外部接口获取数据填充到模型集合中
+            // $ids = $collection->pluck('id');
+            // $data = getDataFromApi($ids);
+            // foreach($collection as $index => $item) {
+            //     $item->column_name = $data[$index];
+            // }
+        
+            // 最后一定要返回集合对象
+            return $collection;
+        });
+
+
         $grid->column('id', __('Id'));
+        $grid->column('number', __('collection 添加的序号'));
         // $grid->column('post_id', __('Post id'));
         $grid->column('post.title', __('title'));
         $grid->column('content', __('Content'))->display(function($str){

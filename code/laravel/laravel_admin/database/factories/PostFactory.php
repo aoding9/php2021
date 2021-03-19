@@ -21,8 +21,10 @@ class PostFactory extends Factory
      */
     public function definition()
     {
+        // $faker = Fake::create('zh_CN');
+
         return [
-            'title'=>$this->faker->text(20),
+            'title'=>$this->faker->title(20),
             'content'=>$this->faker->realText()
         ];
     }

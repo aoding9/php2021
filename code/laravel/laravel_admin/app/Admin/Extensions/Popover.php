@@ -9,7 +9,7 @@ class Popover extends AbstractDisplayer
 {
     public function display($placement = 'left')
     {
-        Admin::script("$('[data-toggle=\"popover\"]').popover()");
+        Admin::script("$('[data-toggle=\"popover\"]').popover();");
 
         return <<<EOT
 <button type="button"

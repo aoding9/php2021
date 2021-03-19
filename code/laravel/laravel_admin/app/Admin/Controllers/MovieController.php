@@ -10,6 +10,9 @@ use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 
+
+
+
 // 依赖注入,把被依赖的对象的实例化过程拿到类的外面进行,修改一个时,不需要去修改另一个,实现解耦
 // 原理:php检测到index2需要Haha类型的参数时,会触发构造方法,从而初始化一些东西,比如查数据什么的(__get也可以触发)
 
@@ -22,22 +25,24 @@ use Encore\Admin\Show;
 class Haha
 {
     protected $haha;
-    public function __construct()
+    public function getHaha()
     {
-        $this->haha = '123';
+        $this->haha = '哈哈哈';
     }
 }
 
 class MovieController extends AdminController
 {
-    public function index2(Haha $content)
+    // 假设当前类依赖于Haha的私有属性haha,把他作为参数传给构造方法或者__set魔术方法,然后绑定为自己的属性,一旦类被实例化,就会去实例化一个Haha,然后类里面都可以访问getHaha了
+    protected $haha;
+    public function __construct(Haha $haha)
     {
-        dump($content);
-        // return $content
-        //     // ->title($this->title())
-        //     // ->description($this->description['index'] ?? trans('admin.list'))
-        //     // ->body($this->grid());
-        //     ->row('123');
+        $this->haha=$haha->getHaha();
+    }
+    
+    public function index2(Haha $haha)
+    {
+        dump($this->haha);
     }
 
     /**
@@ -61,10 +66,16 @@ class MovieController extends AdminController
         $grid->model()->orderBy('id', 'desc');
 
         // 第一列显示id字段，并将这一列设置为可排序列
-        $grid->column('id', 'ID')->sortable();
+        $grid->column('id', 'ID')->sortable()->filter([
+            0 => '未知',
+            1 => '已下单',
+            2 => '已付款',
+            3 => '已取消',
+        ]);;
 
         // 第二列显示title字段，由于title字段名和Grid对象的title方法冲突，所以用Grid的column()方法代替
-        $grid->column('title');
+        $grid->column('title')->filter('like');
+
 
         // 第三列显示director字段，通过display($callback)方法设置这一列的显示内容为users表中对应的用户名
         $grid->column('director')->display(function ($userId) {
@@ -87,9 +98,9 @@ class MovieController extends AdminController
         });
 
         // 下面为三个时间字段的列显示
-        $grid->column('release_at');
-        $grid->column('created_at');
-        $grid->column('updated_at');
+        $grid->column('release_at')->date('Y-m-d h:i:s')->filter('date');
+        $grid->column('created_at')->date('Y-m-d h:i:s');
+        $grid->column('updated_at')->date('Y-m-d h:i:s');
 
         // filter($callback)方法用来设置表格的简单搜索框
         $grid->filter(function ($filter) {
@@ -124,6 +135,16 @@ class MovieController extends AdminController
         // $grid->column('release_at', __('上映时间'));
         // $grid->column('created_at', __('创建时间t'));
         // $grid->column('updated_at', __('更新时间'));
+        $grid->filter(function ($filter) {
+
+            $filter->group('rate', function ($group) {
+                $group->gt('大于');
+                $group->lt('小于');
+                $group->nlt('不小于');
+                $group->ngt('不大于');
+                $group->equal('等于');
+            });
+        });
 
         return $grid;
     }
