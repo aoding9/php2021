@@ -2,12 +2,15 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Selectable\Users;
 use App\Models\Comment;
 use Illuminate\Database\Eloquent\Collection;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Illuminate\Support\MessageBag;
+
 
 class CommentController extends AdminController
 {
@@ -37,21 +40,21 @@ class CommentController extends AdminController
             // foreach($collection as $item) {
             //     $item->full_name = $item->first_name . ' ' . $item->last_name;
             // }
-            
+
             // 2. 给表格加一个序号列
             foreach($collection as $index => $item) {
                 $item->number = $index;
                 // dump($item);
                 // $item->content = $item->$content;
             }
-        
+
             // 3. 从外部接口获取数据填充到模型集合中
             // $ids = $collection->pluck('id');
             // $data = getDataFromApi($ids);
             // foreach($collection as $index => $item) {
             //     $item->column_name = $data[$index];
             // }
-        
+
             // 最后一定要返回集合对象
             return $collection;
         });
@@ -101,8 +104,36 @@ class CommentController extends AdminController
         $form = new Form(new Comment());
 
         $form->number('post_id', __('Post id'));
-        $form->text('content', __('Content'));
+//        $form->text('content', __('Content'));
+//        $form->textarea('content','评论')->rows(10);
+        $form->editor('content','评论内容');
+//        $form->belongsToMany('author_id', Users::class, '作者');
 
+//        表单回调
+
+// 抛出错误信息
+//        $form->saving(function ($form) {
+//
+//            $error = new MessageBag([
+//                'title'   => 'title...',
+//                'message' => 'message....',
+//            ]);
+//
+//            return back()->with(compact('error'));
+//        });
+
+// 抛出成功信息
+
+        $form->saving(function ($form) {
+
+
+            $success = new MessageBag([
+                'title'   => 'title...',
+                'message' => '编辑成功....',
+            ]);
+
+            return back()->with(compact('success'));
+        });
         return $form;
     }
 }

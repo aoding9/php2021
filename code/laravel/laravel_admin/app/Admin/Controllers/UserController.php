@@ -32,7 +32,7 @@ class UserController extends AdminController
 
 
         // 自定义头部工具的配合
-        if (in_array(Request::get('gender'), [ '1','0'])) {
+        if (in_array(Request::get('gender'), ['1', '0'])) {
             $grid->model()->where('gender', Request::get('gender'));
         }
 
@@ -41,7 +41,6 @@ class UserController extends AdminController
         $grid->column('id', __('Id'))->totalRow(function ($id) {
 
             return "<span class='text-danger text-bold'> id合计 {$id} </span>";
-        
         });
         $grid->column('name', __('Name'));
         $grid->column('email', __('Email'));
@@ -86,7 +85,7 @@ class UserController extends AdminController
 
         // 快捷搜索
         $grid->quickSearch(function ($model, $query) {
-            $model->where('name','like', "%{$query}%")->orWhere('email', 'like', "%{$query}%");
+            $model->where('name', 'like', "%{$query}%")->orWhere('email', 'like', "%{$query}%");
         });
 
         $grid->tools(function ($tools) {
@@ -126,11 +125,47 @@ class UserController extends AdminController
     {
         $form = new Form(new User());
 
-        $form->text('name', __('Name'));
+        /*         $form->text('name', __('name'));
         $form->email('email', __('Email'));
         $form->datetime('email_verified_at', __('Email verified at'))->default(date('Y-m-d H:i:s'));
         $form->password('password', __('Password'));
-        $form->text('remember_token', __('Remember token'));
+        $form->text('remember_token', __('Remember token')); */
+
+        // tab  表单tab
+       /*  $form->tab('Basic info', function ($form) {
+
+            $form->text('name');
+            $form->email('email');
+        })->tab('Profile', function ($form) {
+
+            // $form->image('avatar');
+            $form->switch('gender');
+            // $form->mobile('phone');
+        })->tab('Profile', function ($form) {
+            $form->hasOne('profile', function ($form) {
+                // $form->text('company');
+                // $form->date('start_date');
+                // $form->date('end_date');
+                $form->text('content');
+                $form->datetime('created_at');
+            });
+        }); */
+
+        // fieldset设置表单项组合 
+        $form->fieldset('用户信息', function (Form $form) {
+            $form->text('name','我是name')->rules('required|min:10');
+            // 数据列表下拉候选
+            // $form->text('gender')->icon('fa-male')->datalist(['男','女']);
+
+            // 单选按钮
+            $form->radio('gender','性别')->options(['0'=>'男',1=>'女'])->default(1);
+            // 竖排的单选按钮
+            $form->radio('gender','性别')->options(['0'=>'男',1=>'女'])->default(1)->stacked();
+            $form->radioButton('gender','性别')->options(['0'=>'男',1=>'女'])->default(1);
+            $form->radioCard('gender','性别')->options(['0'=>'男',1=>'女'])->default(1);
+
+            $form->email('email')->icon('fa-pencil');
+        });
 
         return $form;
     }

@@ -9,7 +9,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Show;
 // 自定义列操作
 use App\Admin\Actions\Profile\GenderProfile;
-
+use App\Models\User;
 
 class ProfileController extends AdminController
 {
@@ -101,10 +101,42 @@ class ProfileController extends AdminController
     protected function form()
     {
         $form = new Form(new Profile());
+        // $form->setWidth(1000);
 
-        $form->number('user_id', __('User id'));
-        $form->text('age', __('Age'));
-        $form->switch('gender', __('Gender'));
+        // $form->number('user_id', __('User id'))->readonly();
+        // $form->text('age', __('Age'));
+        // $form->switch('gender', __('Gender'));
+
+        // $form->rate('age');
+        // $form->currency('age')->symbol('￥'); 
+        // $form->select('age')->options([0 => '男', 1 => '女']);
+        $form->checkbox('age')->options([0 => '男', 1 => '女']);
+        $form->divider('Title');
+
+        $form->icon('icon');
+        $form->timezone('timezone');
+        $form->color('color')->default('#ccc');
+        $form->mobile('mobile')->options(['mask' => '999 9999 9999']);
+        $form->ip('ip');
+        $form->password('password');
+
+        $form->select('user_id')->options(function ($id) {
+            $user = User::find($id);
+        
+            if ($user) {
+                return [$user->id => $user->name];
+            }
+        })->ajax('/admin/api/users');
+
+
+        // $form->datetimeRange('2021-1-1 18:00:00', '2021-1-2 18:00:00', 'DateTime Range');
+        // $form->listbox('gender')->options([0 => '男', 1 => '女']);
+    /*     $form->slider('age')->options([
+            'max'       => 100,
+            'min'       => 1,
+            'step'      => 1,
+            'postfix'   => 'years old'
+        ]); */
 
         return $form;
     }

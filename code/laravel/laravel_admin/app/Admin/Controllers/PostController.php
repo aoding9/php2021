@@ -80,7 +80,7 @@ class PostController extends AdminController
         //     }
 
         //     // 否则显示为editable(点击即可编辑)
-        //     return $column->editable(); 
+        //     return $column->editable();
         // });
 
         // 列展开,如果一行的字段比较多，可以通过列展开功能，来隐藏过多的内容。通过点击列来展开显示，或者点击展开相关的其它数据，比如下面的例子，用来展开一条文章下的10条最新评论
@@ -96,6 +96,17 @@ class PostController extends AdminController
 
         // 弹出模态框
         $grid->column('title', '标题')->modal(ShowComments::class);
+
+//        $grid->column('cover', '封面图')->display(function($img){
+//            // dd($img);
+//            if($img){
+//                return "<img src='/uploads/$img' width='50'>";
+//            }else{
+//                return "暂无";
+//            }
+//        });
+        $grid->column('cover', '封面图')->image('',80);
+
         // $grid->column('title', '标题')->modal('最新评论', function ($model) {
 
         //     $comments = $model->comments()->take(10)->get()->map(function ($comment) {
@@ -110,8 +121,8 @@ class PostController extends AdminController
         // $grid->column('id', '头像')->gravatar(40);
 
 
-        // 字符串可以直接使用Str辅助函数 ucfirst是php自带的首字母大写函数 
-        // $grid->column('content', __('Content'))->limit(30)->ucfirst(); 
+        // 字符串可以直接使用Str辅助函数 ucfirst是php自带的首字母大写函数
+        // $grid->column('content', __('Content'))->limit(30)->ucfirst();
 
         // $grid->column('content', __('Content'))->display(function($text) {
         //     return mb_substr($text, 0, 30, 'utf8').'...';
@@ -229,12 +240,50 @@ class PostController extends AdminController
     {
         $show = new Show(Post::findOrFail($id));
 
-        $show->field('id', __('Id'));
-        $show->field('title', __('Title'));
-        $show->field('content', __('Content'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
-        $show->field('deleted_at', __('Deleted at'));
+        $show->field('id', 'ID');
+//        $show->field('id')->badge();;
+
+        $show->field('title', '标题');
+//        $show->field('content', '内容');
+        $show->field('rate');
+        $show->field('created_at');
+        $show->field('updated_at');
+        $show->field('release_at');
+        $show->divider();
+        $show->field('cover')->image();
+        $show->json1()->json();
+        $show->field('content')->unescape()->as(function ($avatar) {
+
+            return "<section>{$avatar}</section>";
+
+        });
+
+        $show->panel()
+            ->style('danger')
+            ->title('post基本信息...');
+
+
+        $show->author('作者信息', function ($author) {
+
+            $author->setResource('/admin/users');
+
+            $author->id();
+            $author->name();
+            $author->email();
+        });
+        $show->comments('评论', function ($comments) {
+
+            $comments->resource('/admin/comments');
+
+            $comments->id();
+            $comments->content()->limit(10);
+
+            $comments->filter(function ($filter) {
+                $filter->like('content');
+            });
+        });
+
+        $show->column('cover')->unserialize(Post::find($id));
 
         return $show;
     }
@@ -249,8 +298,40 @@ class PostController extends AdminController
         $form = new Form(new Post());
 
         $form->text('title', __('Title'));
-        $form->textarea('content', __('Content'));
 
+//        $form->textarea('content', __('Content'));
+        $form->editor('content', __('Content'));
+
+        // 上传图片的同时生成缩略图
+        // 这里的图片显示路径会自动拼接.env的app路径
+         $form->image('cover')->removable();
+        // $form->image('cover')->thumbnail('small', $width = 300, $height = 300);
+
+        // 或者多张缩略图
+        // $form->image('cover'])->thumbnail([
+        //     'small' => [100, 100],
+        //     'small' => [200, 200],
+        //     'small' => [300, 300],
+        // ]);
+
+        // $form->file('cover')->rules('mimes:jpg');
+//        $form->file('cover')->removable();
+        // $form->file('cover')->downloadable();
+
+        // $form->multipleImage('cover')->removable();
+        // $form->multipleImage('cover')->sortable()->removable();
+
+//        json
+//        $form->keyValue('json1');
+
+        $form->embeds('json1','json1', function ($form) {
+
+            $form->text('key1')->rules('required');
+            $form->email('email')->rules('required');
+            $form->datetime('key3');
+            $form->dateRange('key4', 'key5', '范围')->rules('required');
+
+        });
         return $form;
     }
 }

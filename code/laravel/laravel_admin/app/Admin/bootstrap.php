@@ -34,3 +34,15 @@ use App\Admin\Extensions\Popover;
 
 Column::extend('popover', Popover::class);
 
+//注册WangEditor富文本编辑器
+use App\Admin\Extensions\WangEditor;
+use Encore\Admin\Form;
+
+Form::extend('editor', WangEditor::class);
+
+// 注册show detail扩展类
+use Encore\Admin\Show;
+use App\Admin\Extensions\Show\UnSerialize;
+
+Show::extend('unserialize', UnSerialize::class);
+

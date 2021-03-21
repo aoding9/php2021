@@ -165,9 +165,9 @@ return [
         /*
          * Package Service Providers...
          */
-
+        zgldh\QiniuStorage\QiniuFilesystemServiceProvider::class,
         // Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
-        
+
         /*
          * Application Service Providers...
          */

@@ -53,13 +53,5 @@ class MemberController extends Controller
     return response()->json($data);
   }
 
-  // ajax头像上传
-  public function webuploader(Request $request)
-  {
-    // 根据id查下属地区
-    $id = $request->id;
-    $data =DB::table('area')->where('pid',$id)->get();
-    // 返回json数据
-    return response()->json($data);
-  }
+
 }

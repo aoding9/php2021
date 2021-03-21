@@ -4,7 +4,6 @@ namespace App\Admin\Controllers;
 
 use App\Models\Movie;
 use App\Models\User;
-use DB;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -216,8 +215,10 @@ class MovieController extends AdminController
         // 显示记录id
         $form->display('id', 'ID');
 
-        // 添加text类型的input框
-        $form->text('title', '电影标题');
+        // text 添加text类型的input框
+        // default 默认信息
+        // autofocus 自动获取焦点
+        $form->text('title', '电影标题')->default('流浪地球')->autofocus();
 
         $directors = [
             1 => 'John',
@@ -225,36 +226,42 @@ class MovieController extends AdminController
             3 => 'Kate',
         ];
 
-        $form->select('director', '导演')->options($directors);
+        // select 下拉选项
+        $form->select('director', '导演')->options($directors)->help('帮助信息');
 
+        // textarea 文本域
         // 添加describe的textarea输入框
-        $form->textarea('describe', '简介');
+        $form->textarea('describe', '简介')->placeholder('请输入描述');
 
-        // 数字输入框
-        $form->number('rate', '打分');
+        // number 数字输入框
+        // pattern 用正则模式 验证输入的值
+        $form->number('rate', '打分')->pattern('[0-5]{1}');
 
-        // 添加开关操作
-        $form->switch('released', '发布？');
+        // switch 添加开关操作
+        // $form->switch('released', '发布？')->value('0');
+        $form->switch('released', '发布？')->value('1')->attribute(['onchange' => 'alert(111)']);;
 
         // 添加日期时间选择框
-        $form->datetime('release_at', '发布时间');
+        // readonly只读, 另外disable是禁用
+        // $form->datetime('release_at', '发布时间')->readonly();
+        $form->datetime('release_at', '发布时间')->disable();
 
         // 两个时间显示
-        $form->display('created_at', '创建时间');
-        $form->display('updated_at', '修改时间');
+        $form->datetime('created_at', '创建时间');
+        $form->datetime('updated_at', '修改时间');
 
         // 右上角工具栏
         /* $form->tools(function (Form\Tools $tools) {
 
             // 去掉`列表`按钮
             $tools->disableList();
-        
+
             // 去掉`删除`按钮
             $tools->disableDelete();
-        
+
             // 去掉`查看`按钮
             $tools->disableView();
-        
+
             // 添加一个按钮, 参数可以是字符串, 或者实现了Renderable或Htmlable接口的对象实例
             $tools->append('<a class="btn btn-sm btn-danger"><i class="fa fa-trash"></i>&nbsp;&nbsp;delete</a>');
         }); */
@@ -269,19 +276,19 @@ class MovieController extends AdminController
 
             // 去掉`重置`按钮
             $footer->disableReset();
-        
+
             // 去掉`提交`按钮
             $footer->disableSubmit();
-        
+
             // 去掉`查看`checkbox
             $footer->disableViewCheck();
-        
+
             // 去掉`继续编辑`checkbox
             $footer->disableEditingCheck();
-        
+
             // 去掉`继续创建`checkbox
             $footer->disableCreatingCheck();
-        
+
         }); */
 
         $form->confirm('确定更新吗？', 'edit');
