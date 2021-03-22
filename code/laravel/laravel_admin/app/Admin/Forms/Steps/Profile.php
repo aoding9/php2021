@@ -1,37 +1,34 @@
 <?php
 
-namespace App\Admin\Forms;
+namespace App\Admin\Forms\Steps;
 
-use Encore\Admin\Widgets\Form;
+use Encore\Admin\Widgets\StepForm;
 use Illuminate\Http\Request;
 
-class Setting extends Form
+class Profile extends StepForm
 {
     /**
      * The form title.
      *
-     * @var  string
+     * @var string
      */
-    public $title = '标题';
-    public $description = '介绍';
+    public $title = '简介表单';
 
     /**
      * Handle the form request.
      *
      * @param Request $request
      *
-     * @return  \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request)
     {
-        //dump($request->all());
-//
-//        admin_success('Processed successfully.');
-//
-//        return back();
-        $result = '计算获得数据...';
+//        dd($this->all());
+        return $this->next($request->all());
 
-        return back()->with(['result' => $result]);
+//        admin_success('Processed successfully.');
+
+//        return back();
     }
 
     /**
@@ -39,6 +36,9 @@ class Setting extends Form
      */
     public function form()
     {
+//        前面的return $this->next($request->all()); 将数据保存到了session的steps中,可以通过$this->all()来获取
+//        dump(session()->all());
+//        dump($this->all());
         $this->text('name')->rules('required');
         $this->email('email')->rules('email');
         $this->datetime('created_at');
@@ -47,7 +47,7 @@ class Setting extends Form
     /**
      * The data of the form.
      *
-     * @return  array $data
+     * @return array $data
      */
     public function data()
     {

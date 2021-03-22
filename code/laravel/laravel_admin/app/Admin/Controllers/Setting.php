@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\Forms;
+namespace App\Admin\Controllers;
 
 use Encore\Admin\Widgets\Form;
 use Illuminate\Http\Request;

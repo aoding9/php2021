@@ -3,11 +3,14 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Extensions\Tools\UserGender;
+//use App\Admin\Forms\Setting;
+use App\Admin\Forms\Setting;
 use App\Models\User;
 use DB;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
+use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 use Encore\Admin\Widgets\Box;
 use Request;
@@ -26,6 +29,8 @@ class UserController extends AdminController
      *
      * @return Grid
      */
+
+
     protected function grid()
     {
         $grid = new Grid(new User());
@@ -100,6 +105,8 @@ class UserController extends AdminController
      * @param mixed $id
      * @return Show
      */
+
+
     protected function detail($id)
     {
         $show = new Show(User::findOrFail($id));
@@ -121,6 +128,7 @@ class UserController extends AdminController
      *
      * @return Form
      */
+
     protected function form()
     {
         $form = new Form(new User());
@@ -151,7 +159,7 @@ class UserController extends AdminController
             });
         }); */
 
-        // fieldset设置表单项组合 
+        // fieldset设置表单项组合
         $form->fieldset('用户信息', function (Form $form) {
             $form->text('name','我是name')->rules('required|min:10');
             // 数据列表下拉候选
@@ -168,5 +176,14 @@ class UserController extends AdminController
         });
 
         return $form;
+    }
+
+
+    public function setting(Content $content)
+    {
+
+        return $content
+            ->title('网站设置')
+            ->body(new Setting());
     }
 }

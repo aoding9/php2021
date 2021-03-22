@@ -218,7 +218,9 @@ class MovieController extends AdminController
         // text 添加text类型的input框
         // default 默认信息
         // autofocus 自动获取焦点
-        $form->text('title', '电影标题')->default('流浪地球')->autofocus();
+        $form->text('title', '电影标题')->default('流浪地球')->autofocus()->rules([
+            'required'
+        ]);
 
         $directors = [
             1 => 'John',

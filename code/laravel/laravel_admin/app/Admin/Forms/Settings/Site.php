@@ -1,37 +1,33 @@
 <?php
 
-namespace App\Admin\Forms;
+namespace App\Admin\Forms\Settings;
 
 use Encore\Admin\Widgets\Form;
 use Illuminate\Http\Request;
 
-class Setting extends Form
+class Site extends Form
 {
     /**
      * The form title.
      *
-     * @var  string
+     * @var string
      */
-    public $title = '标题';
-    public $description = '介绍';
+    public $title = '网站设置';
 
     /**
      * Handle the form request.
      *
      * @param Request $request
      *
-     * @return  \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request)
     {
         //dump($request->all());
-//
-//        admin_success('Processed successfully.');
-//
-//        return back();
-        $result = '计算获得数据...';
 
-        return back()->with(['result' => $result]);
+        admin_success('Processed successfully.');
+
+        return back();
     }
 
     /**
@@ -47,13 +43,13 @@ class Setting extends Form
     /**
      * The data of the form.
      *
-     * @return  array $data
+     * @return array $data
      */
     public function data()
     {
         return [
-            'name' => 'John Doe',
-            'email' => 'John.Doe@gmail.com',
+            'name'       => 'John Doe',
+            'email'      => 'John.Doe@gmail.com123123',
             'created_at' => now(),
         ];
     }
