@@ -8,7 +8,12 @@ use App\Models\Post;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
+use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
+use Encore\Admin\Widgets\Box;
+use Encore\Admin\Widgets\Collapse;
+use Encore\Admin\Widgets\InfoBox;
+use Encore\Admin\Widgets\Tab;
 use Encore\Admin\Widgets\Table;
 use App\Admin\Renderable\ShowComments;
 use App\Admin\Actions\Post\Replicate;
@@ -22,14 +27,12 @@ class PostController extends AdminController
 {
     /**
      * Title for current resource.
-     *
      * @var string
      */
     protected $title = 'Post';
 
     /**
      * Make a grid builder.
-     *
      * @return Grid
      */
     protected function grid()
@@ -105,7 +108,7 @@ class PostController extends AdminController
 //                return "暂无";
 //            }
 //        });
-        $grid->column('cover', '封面图')->image('',80);
+        $grid->column('cover', '封面图')->image('', 80);
 
         // $grid->column('title', '标题')->modal('最新评论', function ($model) {
 
@@ -220,6 +223,7 @@ class PostController extends AdminController
 
         return $grid;
     }
+
     // 批量改文章的接口方法
     public function release()
     {
@@ -230,10 +234,12 @@ class PostController extends AdminController
             $post->save();
         }
     }
+
     /**
      * Make a show builder.
      *
      * @param mixed $id
+     *
      * @return Show
      */
     protected function detail($id)
@@ -290,7 +296,6 @@ class PostController extends AdminController
 
     /**
      * Make a form builder.
-     *
      * @return Form
      */
     protected function form()
@@ -304,7 +309,7 @@ class PostController extends AdminController
 
         // 上传图片的同时生成缩略图
         // 这里的图片显示路径会自动拼接.env的app路径
-         $form->image('cover')->removable();
+        $form->image('cover')->removable();
         // $form->image('cover')->thumbnail('small', $width = 300, $height = 300);
 
         // 或者多张缩略图
@@ -324,7 +329,7 @@ class PostController extends AdminController
 //        json
 //        $form->keyValue('json1');
 
-        $form->embeds('json1','json1', function ($form) {
+        $form->embeds('json1', 'json1', function ($form) {
 
             $form->text('key1')->rules('required');
             $form->email('email')->rules('required');
@@ -334,4 +339,97 @@ class PostController extends AdminController
         });
         return $form;
     }
+
+    public function index(Content $content)
+    {
+//        通知组件
+        /*return $content
+            ->withWarning('Title', 'messages..')
+            ->
+            withInfo('Title', 'messages..')
+            ->
+            withSuccess('Title', 'messages..')
+            ->
+            withError('Title', 'messages..');*/
+
+//        盒子组件
+        $box = new Box('Box标题', 'Box内容');
+
+        $box->content('内容区域');
+        $box->removable();
+
+        $box->collapsable();
+
+        $box->style('info');
+
+        $box->solid();
+
+//        $box->scrollable();
+//        折叠面板组件
+        $collapse = new Collapse();
+
+        $collapse->add('Bar', 'xxxxx');
+        $collapse->add('Orders', new Table());
+
+//表单组件
+        $form = new Form(Post::first());
+
+        $form->action('example');
+
+        $form->email('email')->default('qwe@aweq.com');
+        $form->password('password');
+        $form->text('name', '输入框');
+        $form->url('url');
+        $form->color('color');
+        $form->map('lat', 'lng');
+        $form->date('date');
+        $form->json('val');
+        $form->dateRange('created_at', 'updated_at');
+
+//        信息展示块组件
+        $infoBox = new InfoBox('New Users', 'users', 'aqua', '/admin/users', '1024');
+
+// tab标签页组件
+        $tab = new Tab();
+        $pie = 3.14;
+        $tab->add('Pie', $pie);
+        $tab->add('Table', new Table());
+        $tab->add('Text', 'blablablabla....');
+
+// 表格组件
+        // table 1
+        $headers = ['Id', 'Email', 'Name', 'Company'];
+        $rows = [
+            [1, 'labore21@yahoo.com', 'Ms. Clotilde Gibson', 'Goodwin-Watsica'],
+            [2, 'omnis.in@hotmail.com', 'Allie Kuhic', 'Murphy, Koepp and Morar'],
+            [3, 'quia65@hotmail.com', 'Prof. Drew Heller', 'Kihn LLC'],
+            [4, 'xet@yahoo.com', 'William Koss', 'Becker-Raynor'],
+            [5, 'ipsa.aut@gmail.com', 'Ms. Antonietta Kozey Jr.'],
+        ];
+
+        $table1 = new Table($headers, $rows);
+
+
+// table 2
+        $headers = ['Keys', 'Values'];
+        $rows = [
+            'name' => 'Joe',
+            'age' => 25,
+            'gender' => 'Male',
+            'birth' => '1989-12-05',
+        ];
+
+        $table2 = new Table($headers, $rows);
+
+
+        return $content->body($box)
+            ->body($collapse->render())
+            ->body($form->render())
+            ->body($infoBox->render())
+            ->body($tab->render())
+            ->body($table1->render())
+            ->body($table2->render());
+
+    }
+
 }
