@@ -305,7 +305,7 @@ return [
     | This value is used to set the background image of login page.
     |
     */
-    'login_background_image' => '',
+    'login_background_image' => 'https://img.zcool.cn/community/038efab5816bf75a84a0e282b19a152.jpg',
 
     /*
     |--------------------------------------------------------------------------

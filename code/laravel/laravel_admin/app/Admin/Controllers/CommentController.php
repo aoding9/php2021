@@ -2,7 +2,10 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Comment\ImportComment;
+use App\Admin\Extensions\Export\CommentsExporter;
 use App\Admin\Selectable\Users;
+use App\Imports\CommentsImport;
 use App\Models\Comment;
 use Encore\Admin\Admin;
 use Illuminate\Database\Eloquent\Collection;
@@ -33,6 +36,13 @@ class CommentController extends AdminController
 
         $grid = new Grid(new Comment());
 
+        // 将导入操作加入到表格的工具条中
+        $grid->tools(function (Grid\Tools $tools) {
+            $tools->append(new ImportComment());
+        });
+
+        $grid->exporter(new CommentsExporter());
+
 
         $grid->model()->collection(function (Collection $collection) {
 
@@ -55,6 +65,8 @@ class CommentController extends AdminController
             // foreach($collection as $index => $item) {
             //     $item->column_name = $data[$index];
             // }
+
+
 
             // 最后一定要返回集合对象
             return $collection;

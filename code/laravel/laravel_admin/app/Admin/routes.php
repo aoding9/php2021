@@ -28,8 +28,15 @@ Route::group([
     $router->resource('movies', MovieController::class);
     $router->resource('profiles', ProfileController::class);
 
-    $router->resource('posts', PostController::class);
-    $router->resource('comments', CommentController::class);
+    $router->group([
+//    权限中间件,同意editor角色访问
+//        'middleware' => ['admin.permission:allow,editor']
+//    权限中间件,拒绝editor角色访问
+        'middleware' => ['admin.permission:deny,editor']
+    ], function ($router) {
+        $router->resource('posts', PostController::class);
+        $router->resource('comments', CommentController::class);
+    });
 
     $router->resource('categories', CategoryController::class);
 
@@ -38,16 +45,15 @@ Route::group([
 
 //    数据表单
     $router->get('form/setting', Setting::class);
-    $router->get('form/user_setting', [\App\Admin\Controllers\UserController::class,'setting']);
-    $router->any('form/settings', [\App\Admin\Controllers\FormController::class,'settings']);
-    $router->any('form/register', [\App\Admin\Controllers\FormController::class,'register']);
+    $router->get('form/user_setting', [\App\Admin\Controllers\UserController::class, 'setting']);
+    $router->any('form/settings', [\App\Admin\Controllers\FormController::class, 'settings']);
+    $router->any('form/register', [\App\Admin\Controllers\FormController::class, 'register']);
 
     Route::get('api/users', function () {
         return new Users(User::all());
     });
 
 //   $router->get('movies/test1', 'MovieController@index')->name('test1');
-
 
 
 });

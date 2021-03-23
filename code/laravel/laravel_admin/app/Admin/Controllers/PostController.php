@@ -21,6 +21,7 @@ use App\Admin\Actions\Post\Restore;
 use App\Admin\Extensions\Tools\ReleasePost;
 use Request;
 use App\Admin\Actions\Post\BatchRestore;
+use App\Admin\Extensions\PostsExporter;
 
 
 class PostController extends AdminController
@@ -40,6 +41,7 @@ class PostController extends AdminController
         // dd(Post::factory()->count(5)->create());
         $grid = new Grid(new Post());
 
+        $grid->exporter(new PostsExporter());
         // label 渲染为标签tag
         // icon 渲染图标
         // $grid->column('id', __('Id'))
@@ -373,17 +375,16 @@ class PostController extends AdminController
 
 //表单组件
         $form = new Form(Post::first());
-
-        $form->action('example');
+//        $form->action('example');
 
         $form->email('email')->default('qwe@aweq.com');
         $form->password('password');
         $form->text('name', '输入框');
         $form->url('url');
         $form->color('color');
-        $form->map('lat', 'lng');
+//        $form->map('lat', 'lng');
         $form->date('date');
-        $form->json('val');
+//        $form->json('json1');
         $form->dateRange('created_at', 'updated_at');
 
 //        信息展示块组件
@@ -422,7 +423,9 @@ class PostController extends AdminController
         $table2 = new Table($headers, $rows);
 
 
-        return $content->body($box)
+        return $content
+            ->body($this->grid())
+            ->body($box)
             ->body($collapse->render())
             ->body($form->render())
             ->body($infoBox->render())

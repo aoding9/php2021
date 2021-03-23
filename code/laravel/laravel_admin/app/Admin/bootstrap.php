@@ -18,7 +18,8 @@
  *
  */
 
-Encore\Admin\Form::forget(['map', 'editor']);
+//禁用组件
+//Encore\Admin\Form::forget(['map', 'editor']);
 
 // 扩展列功能
 // 方式一:简单版
@@ -34,7 +35,7 @@ use App\Admin\Extensions\Popover;
 
 Column::extend('popover', Popover::class);
 
-//注册WangEditor富文本编辑器
+//  注册WangEditor富文本编辑器
 use App\Admin\Extensions\WangEditor;
 use Encore\Admin\Form;
 
@@ -46,3 +47,14 @@ use App\Admin\Extensions\Show\UnSerialize;
 
 Show::extend('unserialize', UnSerialize::class);
 
+//  自定义头部导航
+use Encore\Admin\Facades\Admin;
+
+Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
+
+//    $navbar->left('html...');
+    $navbar->left(view('search-bar'));
+//    $navbar->right('html...');
+    $navbar->right(new \App\Admin\Extensions\Nav\Links());
+
+});

@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\Export\UsersExporter;
 use App\Admin\Extensions\Tools\UserGender;
 //use App\Admin\Forms\Setting;
 use App\Admin\Forms\Setting;
@@ -34,7 +35,8 @@ class UserController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new User());
-
+//        导出按钮
+        $grid->exporter(new UsersExporter());
 
         // 自定义头部工具的配合
         if (in_array(Request::get('gender'), ['1', '0'])) {
