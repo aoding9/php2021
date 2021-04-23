@@ -71,7 +71,7 @@ class PostController extends AdminController
 
         // 使用列扩展
         $grid->column('id')->color2('green');
-        // $grid->column('hh')->popover('right');
+        $grid->column('hh')->popover('right');
 
         // _是翻译辅助函数
         // $grid->column('title', __('Title'))->substr(1, 2);

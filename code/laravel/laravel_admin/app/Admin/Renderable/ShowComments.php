@@ -13,7 +13,6 @@ class ShowComments implements Renderable
     public function render($key = null)
     {
 
-
         $comments = Post::find($key)->comments;
             //   $comments = Post::find($key)->comments()->take(10)->get()->map(function ($comment) {
             //     return $comment->only(['id', 'content', 'created_at']);

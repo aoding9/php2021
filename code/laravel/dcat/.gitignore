@@ -5,6 +5,8 @@
 /vendor
 #.env
 !.env
+!.htacess
+nginx.htaccess
 .env.backup
 .phpunit.result.cache
 docker-compose.override.yml

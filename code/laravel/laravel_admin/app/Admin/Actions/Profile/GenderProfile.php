@@ -25,4 +25,5 @@ class GenderProfile extends RowAction
     {
         return $gender ? "<i class=\"fa fa-male\"></i>" : "<i class=\"fa fa-female\"></i>";
     }
+    
 }
